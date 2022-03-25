@@ -1,0 +1,155 @@
+React Element : 일반 객체이며 화면에 표시할 내용을 기술한다
+ex) const element = <h1>Hello, world</h1>
+
+** element 는 component의 구성요소
+
+DOM 이란?
+https://developer.mozilla.org/ko/docs/Web/API/Document_Object_Model/Introduction
+Document Object Model : 문서객체모델은 XML이나 HTML 문서에 접근하기 위한 일종의 인터페이스로
+nodes와 objects로 문서를 표현한다
+
+props 속성을 나타내는 데이터
+
+
+- webpack
+entry
+module
+plugins
+output
+
+import : import x from y / require : const x = require('y');
+
+export default ~   => import ~;
+export const ~ => import {~}
+
+<Map> 
+: 반복의 문제를 해결 -> 달라지는 부분을 배열로 만들어서
+{['사과', '배', '딸기', '포도', '망고'].map( (v) => {
+                        return (
+                            <li>{v}</li>
+                        )
+                    })}
+
+<Key>
+: 2차원 배열이나 dic 구조를 이용해도 좋음 대신에 key를 적어서
+고유한 값을 가지고 있어야 함.
+ {[
+                        { fruit: '감', taste : 'g'},
+                        { fruit: '귤', taste : 'f'},
+                        { fruit: '배', taste : 'd'},
+                        { fruit: '김', taste : 's'}         
+                    ].map( (v) => {
+                        return (
+                            <li key={v.fruit + v.taste}><b>{v.fruit}</b> - {v.taste}</li>
+                        )
+})}
+
+비구조화 할당
+
+prevState
+
+shouldComponentUpdate  {
+ -> return true; : rendering o
+-> return false; : rendering x
+}
+
+PureComponent : 새로운 것이 아니면 렌더링 x
+hooks -> memo로 컴포넌트 감싸기
+
+createRef
+inputRef = createRef();
+this.inputRef.current.focus();
+
+props는 부모가 바꿔야하고 자식이 바꾸면 안됨
+바꿔야하는 경우 -> state로 넣어서 변경
+
+
+< -- 4 -- >
+* 조건문
+ - 3항 연산자 {
+                      this.state.result.length === 0 
+                      ? null 
+                      : <div> 평균시간 : {this.state.result.reduce((a,c) => a + c)/this.state.result.length}ms</div>
+                  }
+
+- inputRef = createRef() :  간단하게 ref 구현 가능! 한데 함수를 쓰는 이유? 미세한 동작을 더 설정할 수 있음
+
+hooks 에서는 this의 속성들을 ref로 표현?
+
+state ref 차이 ?
+값이 바뀔때 렌더링이 다시 되는 경우 -> state
+값이 바뀌더라도 렌더링이 필요 없을땐(화면에는 영향을 미치고싶지 않을때) ref에 넣어서 사용
+
+if문 , for 문 사용하기
+즉시실행 함수 사용
+{( () => {} ) ()}
+
+배열 안에 jsx 담아서 return 하는거 가능한 문법.
+
+
+< -- 5 -- >
+: component가 client에서 불려와서 rendering 되는데 렌더링이 될 때 컴포넌트가 DOM에 붙는 순간이 있는데 
+그 순간에 특정한 동작을 실행할 수 있음. -> componentDidMount()
+ 하지만, 리렌더링일때는 -> componentDidUpdate()
+componentWillUnmount() <- 컴포넌트가 제거되기 직전에 실행되는 함수
+
+- 라이프사이클
+클래스의 경우 -> constructor -> render -> ref -> componentDidMount
+-> (setState/props 바뀔 때 -> shouldCompoenetUpdate -> render -> componentDidUpdate)
+부모가 나를 없앨 때 -> componentWillUnmount -> 소멸
+
+
+- 메서드 속 함수 호출 ( ** 매개변수가 있는 경우도 동일함)
+ onClick={() => this.onClickBtn('바위')} 에서  onClick={this.onClickBtn('바위')} 로 변경 후
+함수에서
+onClickBtn = (choice) => { 함수구현 }; 에서 onClickBtn = (choice) => () => { 함수구현 }; 로 변경
+
+- useEffect (여러번 사용 가능함)
+useEffect( () => {
+        interval.current = setInterval(changeHand, 100);
+        return () => {
+            clearInterval(interval.current);
+        };
+    }, [imgCoord]);  
+두번째 인자에 넣어준 값이 바뀔 때 마다 useEffect는 매번 다시 실행
+그러니까 setInterval 후, return 으로 종료되고 를 반복
+-> 사실상 setTimeout을 하는 것과 동일;;
+: 두 번째 인자가 빈 배열일 경우 componentDidmount와 동일
+: 요소가 있으면 didmount, didupdate 둘 다 수행 
+
+클래스와 hooks 라이프 사이클
+			   result, score, imgCoord
+componentDidMount
+componentDidUpdate
+componentWillUnmount
+
+클래스는 가로
+hooks 는 세로 라고 생각
+
+useMemo -> 함수의 리턴 값을 기억
+useCallback -> 함수 자체를 ㄱㅣ억 
+: 두번째 인자가 바뀌기 전까지 함수 자체를 기억.
+-> 자식 컴포넌트에 props나 컴포넌트를 넘길 경우 useCallback을 사용해야 매번 다른 함수를 생성하지 않음.
+
+hooks는 최상위로 빼서 , 순서를 지켜야함. 조건문 같은 것에 넣지 말기.
+
+< -- 7 -- >
+: 비동기 부분 처리를 위해 리덕스를 써야 하지만, 간단한 부분은 대체 가능
+
+const reducer = (state, action) => {
+     switch (action.type) {
+         case 'SET_WINNER' :
+             // state.winner = action.winner; 이렇게 바꾸면 안됨. -> spread 문법(...) 을 사용하여
+								새로운 객체를 사용해서 바뀌는 부분만 바꿔서
+								 return 하기
+             return {
+                 ...state,
+                 winner: action.winner
+             }
+     }
+};
+
+action을 통해 객체 변경사항을 바꾸는데 해당 액션(객체 타입)을 reducer에서 기술함
+
+< -- 8 -- >
+-> 주변 칸까지 열리게 하는것 : 재귀

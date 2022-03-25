@@ -1,0 +1,29 @@
+<html>
+    <head>
+      <title>반응속도체크</title>
+    </head>
+    
+    <style>
+      #screen {
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        user-select: none;
+      }
+      #screen.waiting {
+        background-color: aqua;
+      }
+      #screen.ready {
+        background-color: blueviolet;
+        color: white;
+      }
+      #screen.now {
+        background-color: olive;
+      }
+    </style>
+
+    <body>
+        <div id="root"></div>
+        <script src="./dist/app.js"></script>
+    </body>
+</html>
