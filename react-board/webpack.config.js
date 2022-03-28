@@ -10,9 +10,8 @@ module.exports = {
     },
 
     entry: {
-        app: ['./client/index']
+        app: ['./client/src/index']
     },
-
     module: {
         rules: [{
             test:/\.jsx?/,
@@ -20,6 +19,7 @@ module.exports = {
             options: {
                 presets: [
                     ['@babel/preset-env', {
+                        useBuiltIns: 'usage', 
                         targets: {
                             browsers: ['> 5% in KR', 'last 2 chrome versions'], //browserslist
                         },
@@ -42,7 +42,7 @@ module.exports = {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js',
         publicPath: '/dist/'
-    },
+    },  // 출력
 
     devServer: {
         devMiddleware: {publicPath: '/dist/'},
