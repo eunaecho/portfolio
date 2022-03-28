@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 
-class BoardAdmin extends Component {
+class Board extends Component {
     state = {
+    };
+
+    onClickBoardTitle = () => {
+        console.log('제목 클릭');
     };
 
     render() {
         return (
             <>
-                <table id="boardList">
+                <h1>사용자</h1>
+                <table id="boardTable">
                     <thead>
                         <tr>
                             <th>번호</th>       
                             <th style={{ width:'300px' }} onClick={this.onClickBoardTitle}>글쓴이</th>
                             <th style={{ width:'80px' }}>제목</th>   
+                            <th style={{ width:'80px' }}>작성 날짜</th>
                             <th>답변</th>
                         </tr>
                     </thead>
@@ -22,16 +28,17 @@ class BoardAdmin extends Component {
                             <td> 0 </td>
                             <td> 글 제목 </td>
                             <td> 작성자 </td>
+                            <td> 날짜 </td>
                             <td> N </td>
                         </tr>
                     </tbody>
                 </table>
                 <div>
-                    <button style={{ margin:'5px' }}>글쓰기</button>
+                    <button style={{ margin:'5px' }} onClick={this.onClickBoardTitle}>글쓰기</button>
                 </div>
             </>
         )
     }
 }
 
-export default BoardAdmin;
+export default Board;

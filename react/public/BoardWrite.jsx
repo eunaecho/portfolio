@@ -2,18 +2,13 @@ import React, { Component } from "react";
 
 class BoardWrite extends Component {
     static = {
-
+        title:'게시글 작성 : 사용자'
     };
 
     render() {
         return (
             <>
-               // 제목 입력 창
-
-               // 내용 입력 창
-
-               // 제출 버튼
-
+                <h1>{this.state.title}</h1>
             </>
         );
     }

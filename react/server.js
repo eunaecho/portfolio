@@ -1,17 +1,34 @@
+const { application } = require('express');
 const express = require('express');
-const { emitWarning } = require('process');
-const app = express();
-const port = 8081;
+const server = express();
+const port = 3001;
 
-const http = require('http').createServer(app);
 
-app.get('/', (req, res) => {
-    res.send('-----server로 전송중-----');
+// port 번호로 서버 오픈
+server.listen(port, () => {
+    console.log(`server works on port : ${port}`);
 });
 
-// 해당 포트에서 서버 실행 
-// 리액트는 8080, 서버는 8081 -> 다른포트를 사용해야 서버와 클라이언트 분리가 가능
-http.listen(port, () => {
-    // 서버 정상으로 실행된 경우
-    console.log(`Listening on ${port}`);
+server.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+// user/board 
+server.get('/user/board', (req, res) => {
+    res.send(' 사용자 게시판 리스트 ');
+});
+
+// user/write
+server.get('/user/write', (req, res) => {
+    res.send(' 사용자 글작성 화면 ');
+});
+
+// admin/board
+server.get('/admin/board', (req, res) => {
+    res.send(' 관리자 게시판 리스트 ');
+});
+
+// admin/read
+server.get('/admin/read', (req, res) => {
+    res.send(' 관리자 글 읽기 ');
 });

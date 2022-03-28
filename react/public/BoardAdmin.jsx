@@ -1,23 +1,19 @@
 import React, { Component } from 'react';
 
-class Board extends Component {
+class BoardAdmin extends Component {
     state = {
-    };
-
-    onClickBoardTitle = () => {
-        console.log('제목 클릭');
     };
 
     render() {
         return (
             <>
-                <table id="boardTable">
+                <h1>관리자</h1>
+                <table id="boardList">
                     <thead>
                         <tr>
                             <th>번호</th>       
                             <th style={{ width:'300px' }} onClick={this.onClickBoardTitle}>글쓴이</th>
                             <th style={{ width:'80px' }}>제목</th>   
-                            <th style={{ width:'80px' }}>작성 날짜</th>
                             <th>답변</th>
                         </tr>
                     </thead>
@@ -39,4 +35,4 @@ class Board extends Component {
     }
 }
 
-export default Board;
+export default BoardAdmin;
