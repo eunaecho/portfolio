@@ -18,6 +18,9 @@ class BoardWrite extends Component {
     };
 
     onClickSave = () => {
+        //db로 저장
+        //
+
         this.setState({
             title: '',
             content: ''
