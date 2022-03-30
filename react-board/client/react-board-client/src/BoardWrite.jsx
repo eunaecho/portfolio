@@ -71,8 +71,8 @@ class BoardWrite extends Component {
                     </table>
                 </div>
                 <div>
-                    <button >취소</button>
                     <Link to="/board/user">
+                        <button >취소</button>
                         <button onClick={this.onClickSave}>저장</button>
                     </Link>
                 </div>

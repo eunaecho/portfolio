@@ -1,15 +1,21 @@
-const express = require('express');
-const app = express();
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server); //socket 통신 : http 서버를 socket 서버로 upgrade
 const PORT = process.env.PORT || 2999;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mariadb = require('mysql');
 const config = require('./database/db_config.json');
 
+server.listen(PORT, () => {
+    console.log(`Socket IO server : http://localhost:${PORT}/`);
+});
+
 // 기본 서버 확인
 app.get('/', (req, res) => {
-    res.send('Server Response Success');
+    res.send('Socket IO server listening on port 2999');
 });
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -56,7 +62,5 @@ app.post("/board/write/insert", (req, res) => {
     
 });
 
-app.listen(PORT, () => {
-    console.log(`Server On : http://localhost:${PORT}/`);
-});
+
 
