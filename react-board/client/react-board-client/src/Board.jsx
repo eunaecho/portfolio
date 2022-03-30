@@ -9,23 +9,41 @@ class Board extends Component {
         userName: "_이름",
         writeDate: "_날짜",
         answer: "N",
-        
-        //가져온 데이터 나타내기
-        boardList:{
-            index: "-",
-            title: "-",
-            userName: "-",
-            writeDate: "-",
-            answer: "-",
-        } 
     };
+    
+    //가져온 데이터 나타내기
+    boardList = new Array();
+
+    boardObject = {
+        index: "-",
+        title: "-",
+        userName: "-",
+        writeDate: "-",
+        answer: "-",
+    } 
 
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/user/select")
         .then((res) => res.json())
         .then((res) => { 
             console.log('server response for select : ' , res); 
+            
+            for(var i=0; i<res.lenth; i++) {
+                this.boardList.push('3');
+                console.log(1);
+            }
+
+            console.log(this.boardList);
+            // this.getBoardList(res);
         });
+    }
+
+    getBoardList = (res) => {
+        for(var i=0; i<res.lenth; i++) {
+            this.boardList.push(res[i]);
+        }
+
+        console.log(this.boardList);
     }
 
     // 이동
