@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 
 class BoardAdmin extends Component {
     state = {
+        title: "관리자"
     };
 
     render() {
         return (
             <>
-                <h1>관리자</h1>
+                <h1>{this.state.title}</h1>
                 <table id="boardList">
                     <thead>
                         <tr>

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "client.jsx",
   "scripts": {
-    "start": "nodemon ./server.js"
+    "start": "nodemon ./server.js",
+    "dev": "webpack serve --env development"
   },
   "author": "eunae cho",
   "license": "MIT",

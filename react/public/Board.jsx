@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 class Board extends Component {
     state = {
+        title: "사용자"
     };
 
     onClickBoardTitle = () => {
@@ -11,7 +12,7 @@ class Board extends Component {
     render() {
         return (
             <>
-                <h1>사용자</h1>
+                <h1>{this.state.title}</h1>
                 <table id="boardTable">
                     <thead>
                         <tr>

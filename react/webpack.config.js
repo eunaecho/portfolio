@@ -10,7 +10,7 @@ module.exports = {
     },
 
     entry: {
-        app: ['./client'],
+        app: ['./src/client'],
     }, 
 
     module: {
@@ -23,7 +23,8 @@ module.exports = {
                         targets: {
                             browsers: ['> 5% in KR', 'last 2 chrome versions'], //browserslist
                         },
-                        debug: true
+                        debug: true,
+                        "useBuiltIns": "entry"
                     }],
                     '@babel/preset-react',
                 ],
@@ -40,7 +41,7 @@ module.exports = {
     ],
 
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, '/dist'),
         filename: 'bundle.js',
         publicPath: '/dist/'
     },
