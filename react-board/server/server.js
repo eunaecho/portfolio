@@ -1,62 +1,60 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 2999;
-const mariadb = require('mariadb');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const mariadb = require('mysql');
+const config = require('./database/db_config.json');
 
-// db 연동
-const db = mariadb.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root1234',
-    database: 'testdb'
-});
-
-//
+// 기본 서버 확인
 app.get('/', (req, res) => {
     res.send('Server Response Success');
 });
 
-app.get('/hello', (req, res) => {
-    res.send({ hello: 'Hello react'});
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
 
-app.get("/insert", (req, res) => {
-    const sqlQuery = "insert into tb_board(title, contents, writer_name, answer_yn, writedate) values ('7번째 게시글', 'insert 테스트3', '은애', 'N', now())";
-    db.query(sqlQuery, (err, result) => {
-            res.send('insert success');
-    })
-});
+//cors Error : https://ooz.co.kr/232
 
-app.get("/select", (req, res) => {
-    db.getConnection((err, connection) => {
-        if (err)
-            res.send(err);
-        else {
-            console.log('connection : 성공');
-            connection.query("select * from tb_board where idx=3", function(err, results) {
-                if (err)
-                    res.send('connection 속 에러 : ', err);
-                else{
-                    console.log('connection : result');
-                    res.send({data : results});
-                }
-            });
-            connection.release();
-        }
-    })
-});
+// db 연동
+const db = mariadb.createPool(config);
 
-app.get('/db-connect-check', (req, res) => {
+// insert 함수
+const insertData = (title, content, result1) => {
+    const sqlQuery = "insert into tb_board(title, contents, writer_name, answer_yn, writedate) values( ?, ?, ?, ?, now())";
+        db.query(sqlQuery, 
+            [title, content , '조은애', 'N'],
+            function(err, result) {
+                if(err)
+                    console.log('>>> insert 실패 : ', err);
+                else
+                    console.log('>>> insert 성공 : ', result);
+            }
+        )
+}
+
+// 사용자 -> 게시판 불러오기
+app.get("/board/user/select", (req, res) => {
     const sqlQuery = "select * from tb_board";
-    db.query(sqlQuery, (err, data) => {
-        if(err) {
-            res.send(err);
-        }
-        else{
-            res.send(data);
-        }
-    })
-})
+    db.query(sqlQuery, (err, result) => {
+        if(err)
+            throw err;
+        else
+            res.json(result);
+    })    
+});
+
+
+// 사용자 -> 게시글 저장 -> 데이터 받아서 -> db에 저장
+app.post("/board/write/insert", (req, res) => {
+    insertData(req.body.postTitle, req.body.postContent, res);
+    if (err)
+        throw err;
+    else
+        res.json({ code: "200", message: "success!"});
+    
+});
 
 app.listen(PORT, () => {
     console.log(`Server On : http://localhost:${PORT}/`);

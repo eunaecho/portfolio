@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 
 class BoardWrite extends Component {
     state = {
@@ -17,14 +19,29 @@ class BoardWrite extends Component {
         console.log(e.target.id, this.state.content);
     };
 
-    onClickSave = () => {
-        //db로 저장
-        //
+    onClickSave = (e) => {
+        // 서버로 전송 -> 서버에서 받아서 db에 저장
+        const post = {
+            postTitle : this.state.title,
+            postContent : this.state.content
+        };
 
+        fetch("http://localhost:2999/board/write/insert", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(post),
+        })
+        .then((res) => res.json())
+        .then((res) => { console.log('server response : ' , res); });
+
+        // state 초기화
         this.setState({
             title: '',
             content: ''
         })
+
     };
 
     render() {
@@ -55,7 +72,9 @@ class BoardWrite extends Component {
                 </div>
                 <div>
                     <button >취소</button>
-                    <button onClick={this.onClickSave}>저장</button>
+                    <Link to="/board/user">
+                        <button onClick={this.onClickSave}>저장</button>
+                    </Link>
                 </div>
             </>
         );

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Board extends Component {
     state = {
@@ -7,14 +8,27 @@ class Board extends Component {
         title: "_제목",
         userName: "_이름",
         writeDate: "_날짜",
-        answer: "N"
+        answer: "N",
+        
+        //가져온 데이터 나타내기
+        boardList:{
+            index: "-",
+            title: "-",
+            userName: "-",
+            writeDate: "-",
+            answer: "-",
+        } 
     };
 
     onClickDBConnection = () => {
-
+        fetch("http://localhost:2999/board/user/select")
+        .then((res) => res.json())
+        .then((res) => { 
+            console.log('server response for select : ' , res); 
+        });
     }
 
-    //boardWrite로 이동
+    // 이동
     onClickBoardTitle = () => {
         
     };
@@ -47,7 +61,9 @@ class Board extends Component {
                 </table>
                 <div>
                     <button style={{ margin:'5px' }} onClick={this.onClickDBConnection}>db연결</button>
-                    <button style={{ margin:'5px' }} onClick={this.onClickBoardTitle}>글쓰기</button>
+                    <Link to="/board/write">
+                        <button style={{ margin:'5px' }}>글쓰기</button>
+                    </Link>
                 </div>
             </>
         )
