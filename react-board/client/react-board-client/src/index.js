@@ -11,8 +11,13 @@ ReactDOM.render(
         <Routes>
             <Route path="/board/user" element={ <Board/> }/>
             <Route path="/board/admin" element={ <BoardAdmin/> }/>
-            <Route path="/board/read" element={ <BoardRead/> }/>
+            <Route path="/board/read/:index" element={ <BoardRead/> }/>
             <Route path="/board/write" element={ <BoardWrite/> }/>
         </Routes>
     </BrowserRouter>
-    , document.getElementById('root'));
+    , document.getElementById('root')
+);
+
+
+// react-router-dom v6 -> useParams로 param 받기
+// https://reactrouter.com/docs/en/v6/api#useparams

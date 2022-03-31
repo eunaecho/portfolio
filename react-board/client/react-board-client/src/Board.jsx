@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import TableRow from './TableRow';
 
 class Board extends Component {
     state = {
@@ -9,53 +10,45 @@ class Board extends Component {
         userName: "_이름",
         writeDate: "_날짜",
         answer: "N",
+        boardList: []
     };
     
     //가져온 데이터 나타내기
-    boardList = new Array();
+    // boardList = [];
 
-    boardObject = {
-        index: "-",
-        title: "-",
-        userName: "-",
-        writeDate: "-",
-        answer: "-",
-    } 
-
+    componentDidMount() {
+        this.onClickDBConnection();
+    };
+    
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/user/select")
         .then((res) => res.json())
-        .then((res) => { 
-            console.log('server response for select : ' , res); 
-            
-            for(var i=0; i<res.lenth; i++) {
-                this.boardList.push('3');
-                console.log(1);
-            }
-
-            console.log(this.boardList);
-            // this.getBoardList(res);
-        });
+        .then((res) => { this.getBoardList(res); });
     }
-
+    
     getBoardList = (res) => {
-        for(var i=0; i<res.lenth; i++) {
-            this.boardList.push(res[i]);
+        this.boardList = [];
+        for(var i=0; i< res.length; i++) {
+            this.setState((prevState) => {
+                return {
+                    boardList: [...prevState.boardList, res[i]]
+                }
+            });
         }
 
         console.log(this.boardList);
-    }
+    };
 
+   
     // 이동
     onClickBoardTitle = () => {
         
     };
 
     render() {
-        const { header, index, title, userName, writeDate, answer } = this.state ;
         return (
             <>
-                <h1>{header}</h1>
+                <h1>{this.state.header}</h1>
                 <table id="boardTable">
                     <thead>
                         <tr>
@@ -68,13 +61,7 @@ class Board extends Component {
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td> {index} </td>
-                            <td> {title} </td>
-                            <td> {userName} </td>
-                            <td> {writeDate} </td>
-                            <td> {answer} </td>
-                        </tr>
+                        { this.state.boardList.map((v, i) => <TableRow key={i} data={v}/> )}
                     </tbody>
                 </table>
                 <div>

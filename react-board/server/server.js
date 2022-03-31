@@ -16,12 +16,9 @@ app.get('/', (req, res) => {
     res.send('Socket IO server listening on port 2999');
 });
 
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
-
-//cors Error : https://ooz.co.kr/232
+app.use(cors());    //cors Error : https://ooz.co.kr/232
 
 // db 연동
 const db = mariadb.createPool(config);
@@ -40,10 +37,21 @@ const insertData = (title, content, result1) => {
         )
 }
 
-// 사용자 -> 게시판 불러오기
+// 사용자 -> 게시판 불러오기 (List)
 app.get("/board/user/select", (req, res) => {
     const sqlQuery = "select * from tb_board";
     db.query(sqlQuery, (err, result) => {
+        if(err)
+            throw err;
+        else
+            res.json(result);
+    })    
+});
+
+// 게시판 글 불러오기 (One)
+app.get("/board/read/select/:index", (req, res) => {
+    const sqlQuery = "select * from tb_board where idx = ?";
+    db.query(sqlQuery, req.params.index, (err, result) => {
         if(err)
             throw err;
         else
