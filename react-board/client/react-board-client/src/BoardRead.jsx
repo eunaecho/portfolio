@@ -8,14 +8,14 @@ class BoardRead extends Component {
     };
    
     componentDidMount() {
-        //
+        console.log(window.location.pathname);
+        this.getBoardData();
     }
-    
     getBoardData = () => {
         fetch("http://localhost:2999/board/read/select/3")
         .then((res) => res.json())
         .then((res) => { console.log(res) });
-    }
+    };
     
     getBoardList = (res) => {
         this.boardList = [];
@@ -78,8 +78,7 @@ class BoardRead extends Component {
             </>
         );
     };
-
-}
+};
 
 export default BoardRead;
 

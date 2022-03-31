@@ -49,7 +49,8 @@ app.get("/board/user/select", (req, res) => {
 });
 
 // 게시판 글 불러오기 (One)
-app.get("/board/read/select/:index", (req, res) => {
+app.use("/board/read/select/:index", (req, res) => {
+    console.log(req);
     const sqlQuery = "select * from tb_board where idx = ?";
     db.query(sqlQuery, req.params.index, (err, result) => {
         if(err)

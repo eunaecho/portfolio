@@ -19,5 +19,5 @@ ReactDOM.render(
 );
 
 
-// react-router-dom v6 -> useParams로 param 받기
-// https://reactrouter.com/docs/en/v6/api#useparams
+// react-router-dom v6 -> useParams로 param 받기 :hooks..
+
