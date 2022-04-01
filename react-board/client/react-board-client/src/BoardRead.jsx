@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
+import { withRouter } from "./withRouter";
+
 
 class BoardRead extends Component {
     state = {
@@ -10,17 +11,17 @@ class BoardRead extends Component {
     };
    
     componentDidMount() {
-        const {idx} = this.props.match.params;
-        console.log();
+        console.log();        
         this.getBoardData();
     }
 
     getBoardData = () => {
-        fetch(`http://localhost:2999/board/read/select/`)
+        const numBoard = this.props.router.params.index;
+        fetch(`http://localhost:2999/board/read/select/${numBoard}`)
         .then((res) => res.json())
         .then((res) => { 
             this.setState({ title: res[0].title,
-                            content: res[0].content }); 
+                            content: res[0].contents }); 
         });
     };
 
@@ -44,7 +45,7 @@ class BoardRead extends Component {
                         <tr>
                             <th> 내용 </th>
                             <td id='read-content'>
-                                <text id='text-read-content'> 게시글 내용 </text>
+                                <text id='text-read-content'> {this.state.content} </text>
                             </td>
                         </tr>
                     </tbody>
