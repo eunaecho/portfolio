@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
+import io from 'socket.io-client';
+
+const USER_TYPE = 'user';
+const ENDPOINT = 'http://localhost:2999';
 
 class Board extends Component {
     state = {
@@ -12,14 +16,24 @@ class Board extends Component {
         answer: "N",
         boardList: []
     };
-    
-    //가져온 데이터 나타내기
-    // boardList = [];
 
+    //socket 연결
+    socket = io.connect(ENDPOINT, {
+        cors:{origin:'*'}
+    });
+    
     componentDidMount() {
+        this.socket.on("connect", () => {
+            console.log("connection server :: ", this.socket.id);
+        });
+        
         this.onClickDBConnection();
     };
     
+    componentWillUnmount() {
+        // socket 연결 끊기
+    }
+
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/user/select")
         .then((res) => res.json())
@@ -31,18 +45,11 @@ class Board extends Component {
         for(var i=0; i< res.length; i++) {
             this.setState((prevState) => {
                 return {
-                    boardList: [...prevState.boardList, res[i]]
-                }
-            });
-        }
+                    boardList: [...prevState.boardList, res[i]] }});
+    }};
 
-        console.log(this.boardList);
-    };
-
-   
-    // 이동
     onClickBoardTitle = () => {
-        
+        // 이동
     };
 
     render() {

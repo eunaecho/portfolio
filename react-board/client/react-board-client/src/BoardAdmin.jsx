@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+const USER_TYPE = 'amdin';
+
 class BoardAdmin extends Component {
     state = {
         header: "관리자 게시판 리스트",

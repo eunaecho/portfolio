@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 
 class BoardRead extends Component {
     state = {
@@ -8,26 +10,18 @@ class BoardRead extends Component {
     };
    
     componentDidMount() {
-        console.log(window.location.pathname);
+        const {idx} = this.props.match.params;
+        console.log();
         this.getBoardData();
     }
-    getBoardData = () => {
-        fetch("http://localhost:2999/board/read/select/3")
-        .then((res) => res.json())
-        .then((res) => { console.log(res) });
-    };
-    
-    getBoardList = (res) => {
-        this.boardList = [];
-        for(var i=0; i< res.length; i++) {
-            this.setState((prevState) => {
-                return {
-                    boardList: [...prevState.boardList, res[i]]
-                }
-            });
-        }
 
-        console.log(this.boardList);
+    getBoardData = () => {
+        fetch(`http://localhost:2999/board/read/select/`)
+        .then((res) => res.json())
+        .then((res) => { 
+            this.setState({ title: res[0].title,
+                            content: res[0].content }); 
+        });
     };
 
     render() {
@@ -75,11 +69,17 @@ class BoardRead extends Component {
                 </table>
             </div>
 
+            <div>
+                <Link to="/board/user">
+                    <button id=" btn-board">목록으로</button>
+                </Link>
+            </div>
+
             </>
         );
     };
 };
 
-export default BoardRead;
+export default withRouter(BoardRead);
 
 //파스칼 케이스로 해야함 -> <text> 부분 고치기

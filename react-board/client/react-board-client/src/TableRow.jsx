@@ -4,14 +4,10 @@ import { Link } from "react-router-dom";
 const TableRow = ( {data} ) => {
     let rowData = data;
 
-    const onClickTitle = (e) => {
-        console.log(e.target.value);
-    }
-
     return (
         <tr key={rowData.idx}>
             <td> {rowData.idx}</td>
-            <td onClick={onClickTitle} id={rowData.title}>
+            <td id={rowData.title}>
                 <Link to={`/board/read/${rowData.idx}`}>{rowData.title}</Link>
             </td>
             <td> {rowData.writer_name} </td>

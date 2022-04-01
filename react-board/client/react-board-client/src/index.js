@@ -18,6 +18,5 @@ ReactDOM.render(
     , document.getElementById('root')
 );
 
-
 // react-router-dom v6 -> useParams로 param 받기 :hooks..
 
