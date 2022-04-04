@@ -6,6 +6,7 @@ class BoardWrite extends Component {
     state = {
         header: '사용자 입력 화면',
         title: '_빈 제목',
+        writer: '작성자',
         content: '_빈 내용'
     };
 
@@ -45,7 +46,7 @@ class BoardWrite extends Component {
     };
 
     render() {
-        const { header, title, content } = this.state;
+        const { header} = this.state;
         return (
             <>
                 <div>

@@ -6,6 +6,15 @@ import io from 'socket.io-client';
 const USER_TYPE = 'user';
 const ENDPOINT = 'http://localhost:2999';
 
+// const getUserType = () => {
+//     var pathname = window.location.pathname;
+
+//     if( pathname.includes('/board/admin')) 
+//         USER_TYPE = 'admin';
+
+//     console.log(USER_TYPE);
+// }
+
 class Board extends Component {
     state = {
         header: "사용자 게시판 리스트",
@@ -18,24 +27,28 @@ class Board extends Component {
     };
 
     //socket 연결
-    socket = io.connect(ENDPOINT, {
-        cors:{origin:'*'}
-    });
+    socket = io.connect(ENDPOINT, { cors: { origin:'localhost:2999', 
+                                            Credential:true }});
     
     componentDidMount() {
         this.socket.on("connect", () => {
-            console.log("connection server :: ", this.socket.id);
+                console.log("connection server :: ", this.socket);       
+                console.log("this props", this.props);
         });
-        
+       
         this.onClickDBConnection();
+    };
+
+    componentDidUpdate() {
+
     };
     
     componentWillUnmount() {
-        // socket 연결 끊기
+         
     }
 
     onClickDBConnection = () => {
-        fetch("http://localhost:2999/board/user/select")
+        fetch("http://localhost:2999/board/select")
         .then((res) => res.json())
         .then((res) => { this.getBoardList(res); });
     }
@@ -48,19 +61,16 @@ class Board extends Component {
                     boardList: [...prevState.boardList, res[i]] }});
     }};
 
-    onClickBoardTitle = () => {
-        // 이동
-    };
-
     render() {
+        const { header, boardList} = this.state ;
         return (
             <>
-                <h1>{this.state.header}</h1>
+                <h2>{header}</h2>
                 <table id="boardTable">
                     <thead>
                         <tr>
                             <th>번호</th>       
-                            <th style={{ width:'300px' }} onClick={this.onClickBoardTitle}>제목</th>
+                            <th style={{ width:'300px' }}>제목</th>
                             <th style={{ width:'80px' }}>작성자</th>   
                             <th style={{ width:'80px' }}>작성 날짜</th>
                             <th>답변</th>
@@ -68,12 +78,11 @@ class Board extends Component {
                     </thead>
 
                     <tbody>
-                        { this.state.boardList.map((v, i) => <TableRow key={i} data={v}/> )}
+                        { boardList.map((v, i) => <TableRow key={i} data={v}/> )}
                     </tbody>
                 </table>
                 <div>
-                    <button style={{ margin:'5px' }} onClick={this.onClickDBConnection}>db연결</button>
-                    <Link to="/board/write">
+                    <Link to="/board/write" state={ {socket:this.socket}}>
                         <button style={{ margin:'5px' }}>글쓰기</button>
                     </Link>
                 </div>

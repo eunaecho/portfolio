@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { io } from 'socket.io-client';
+import TableRow from './TableRow';
 
 const USER_TYPE = 'amdin';
+const ENDPOINT = 'http://localhost:2999';
 
 class BoardAdmin extends Component {
     state = {
@@ -9,14 +12,42 @@ class BoardAdmin extends Component {
         title: "_제목",
         userName: "_이름",
         writeDate: "_날짜",
-        answer: "N"
+        answer: "N",
+        boardList: []
+    };
+
+    //socket 연결
+    socket = io.connect(ENDPOINT, {
+        cors:{origin:'localhost:2999'}
+    });
+    
+    onClickDBConnection = () => {
+        fetch("http://localhost:2999/board/select")
+        .then((res) => res.json())
+        .then((res) => { this.getBoardList(res); });
+    }
+    
+    getBoardList = (res) => {
+        this.boardList = [];
+        for(var i=0; i< res.length; i++) {
+            this.setState((prevState) => {
+                return {
+                    boardList: [...prevState.boardList, res[i]] }});
+    }};
+                
+    componentDidMount() {
+        this.socket.on("connect", () => {
+            console.log("connection server :: ", this.socket.id);
+        });
+
+        this.onClickDBConnection();
     };
 
     render() {
-        const { header, index, title, userName, writeDate, answer } = this.state ;
+        const { header, boardList} = this.state ;
         return (
             <>
-                <h1>{header}</h1>
+                <h2>{header}</h2>
                 <table id="boardTable">
                     <thead>
                         <tr>
@@ -29,16 +60,9 @@ class BoardAdmin extends Component {
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td> {index} </td>
-                            <td> {title} </td>
-                            <td> {userName} </td>
-                            <td> {writeDate} </td>
-                            <td> {answer} </td>
-                        </tr>
+                        { boardList.map((v, i) => <TableRow key={i} data={v}/> )}
                     </tbody>
                 </table>
-                
             </>
         )
     }

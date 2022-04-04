@@ -1,19 +1,22 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { io } from "socket.io-client";
 import { withRouter } from "./withRouter";
-
 
 class BoardRead extends Component {
     state = {
         header: '게시글 확인 화면',
         title: '읽어올 제목',
+        writer: '글 작성자',
         content: '읽어올 내용'
     };
-   
+    
+    socket;
+
     componentDidMount() {
-        console.log();        
+        console.log();
         this.getBoardData();
-    }
+    };
 
     getBoardData = () => {
         const numBoard = this.props.router.params.index;
@@ -21,40 +24,48 @@ class BoardRead extends Component {
         .then((res) => res.json())
         .then((res) => { 
             this.setState({ title: res[0].title,
+                            writer: res[0].writer_name,
                             content: res[0].contents }); 
         });
     };
 
+    onClickReplyButton = () => {
+        console.log(this);
+    };
+
     render() {
-        const { header, title, content } = this.state;
+        const { header} = this.state;
         return (
             <>
             <h1>{header}</h1>
             <div >
                 <table id="tb-read-board">
-                    <thead>
+                    <tbody>
                         <tr>
                             <th> 제목 </th>
                             <td id='read-title'>
-                                <label id='label-read-title'>{this.state.title}</label>
+                                <label id='label-read-title' style={{ width:'200px' }} >{this.state.title}</label>
                             </td>
                         </tr>
-                    </thead>
-
-                    <tbody>
+                        <tr>
+                            <th> 작성자 </th>
+                            <td id='read-title'>
+                                <label id='label-read-title' style={{ width:'200px' }} >{this.state.writer}</label>
+                            </td>
+                        </tr>
                         <tr>
                             <th> 내용 </th>
                             <td id='read-content'>
-                                <text id='text-read-content'> {this.state.content} </text>
+                                <text id='text-read-content' style={{ width:'200px' }}> {this.state.content} </text>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div id='div-input-reply'>
-                <input type='text' />
-                <button id='btn-reply'> 입력</button>
+            <div id='div-reply'>
+                <input id='div-input-reply-text' type='text' />
+                <button id='btn-reply' onClick={this.onClickReplyButton}> 입력</button>
             </div>
 
             <div>
@@ -63,7 +74,7 @@ class BoardRead extends Component {
                     <tr>
                         <th> 댓글 작성자 </th>
                         <td id='read-content'>
-                        <text id='text-read-reply'> 댓글 내용 </text>
+                        <text id='text-read-reply' style={{ width:'200px' }}> 댓글 내용 </text>
                         </td>
                     </tr>
                 </tbody>
