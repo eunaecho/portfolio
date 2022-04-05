@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { clientsocket } from "./clientSocket";
 import { withRouter } from "./withRouter";
+
+const clientSocket = clientsocket;
 
 class BoardRead extends Component {
     state = {
         header: '게시글 확인 화면',
+        boardIdx: '0',
         title: '읽어올 제목',
         writer: '글 작성자',
         content: '읽어올 내용'
     };
-    
-    //BoardUser에서 받아온 소켓
-    socket;
 
     componentDidMount() {
-        console.log(this.props);
         this.getBoardData();
     };
 
@@ -30,7 +30,8 @@ class BoardRead extends Component {
     };
 
     onClickReplyButton = () => {
-        console.log(this);
+        const { boardIdx ,writer, content} = this.state;
+        // clientSocket.emit('addReply', );
     };
 
     render() {
@@ -63,8 +64,15 @@ class BoardRead extends Component {
                 </table>
             </div>
 
-            <div id='div-reply'>
-                <input id='div-input-reply-text' type='text' />
+            <div id='div-reply' align='center'>
+                <label> 이름
+                    <input id='div-input-reply-name' type='text' style={{width: '80px', height:'25px'}}
+                            onChange={this.getNameValue}/>
+                </label>
+                <label> 댓글
+                    <input id='div-input-reply-text' type='text' style={{width: '200px', height:'25px'}}
+                            onChange={this.getReplyValue}/>
+                </label>
                 <button id='btn-reply' onClick={this.onClickReplyButton}> 입력</button>
             </div>
 

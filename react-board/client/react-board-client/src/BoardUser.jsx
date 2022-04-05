@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
-import io from 'socket.io-client';
+import { clientsocket } from './clientSocket';
 
 const ENDPOINT = 'http://localhost:2999';
 
-// const getUserType = () => {
-//     var pathname = window.location.pathname;
-
-//     if( pathname.includes('/board/admin')) 
-//         USER_TYPE = 'admin';
-
-//     console.log(USER_TYPE);
-// }
+const clientSocket = clientsocket;
 
 class Board extends Component {
     state = {
@@ -24,25 +17,12 @@ class Board extends Component {
         answer: "N",
         boardList: []
     };
-
-    //socket 연결
-    clientSocket = io.connect(ENDPOINT, { cors: { origin:'localhost:2999', Credential:true }});
     
     componentDidMount() {
-        const { clientSocket } = this;
-        clientSocket.emit("connection", (clientSocket) => {
-                console.log("connection server :: ", clientSocket);       
-            });
+        console.log('client - socket : ', clientSocket.id);
 
         this.onClickDBConnection();
     };
-
-    componentDidUpdate() {
-    };
-    
-    componentWillUnmount() { 
-
-    }
 
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/select")

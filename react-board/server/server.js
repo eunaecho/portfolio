@@ -27,10 +27,9 @@ io.on("connection", (socket) => {
         
         
         // 댓글 추가
-        socket.on('addReply', () => {
-            console.log('댓글 실험');
-            // 댓글 db에 저장
-
+        socket.on('addReply', ( boardIdx, replyWriter, content ) => {            
+            // 댓글 db에 저장 : 댓글 idx(auto_), 게시글 idx, 작성자 이름, 내용, 시간(now())
+            insertReply( boardIdx, replyWriter, content );
             // 저장 후 사용자, 관리자에게 알림
         })
 
@@ -44,7 +43,6 @@ io.on("connection", (socket) => {
 app.get('/', (req, res) => {
     res.send('Socket IO server listening on port 2999');
 });
-
 
 // db 연동
 const db = mariadb.createPool(config);
@@ -92,11 +90,11 @@ const insertData = (title, content) => {
 }
 
 // 댓글 insert 함수
-const insertReply = (boardIdx, content) => {
-    const sqlQuery = "insert into tb_comment(idx, board_idx, commenter, contents, writedate)"
-                     + " values( ?, ?, ?, ?, now())";
+const insertReply = (boardIdx, replyWriter, content) => {
+    const sqlQuery = "insert into tb_comment(board_idx, commenter, contents, writedate)"
+                     + " values( ?, ?, ?, ?)";
         db.query(sqlQuery, 
-            [boardIdx, content , '댓글자', 'N'],
+            [boardIdx, replyWriter, content, 'now()' ],
             function(err, result) {
                 if(err)
                     throw err;

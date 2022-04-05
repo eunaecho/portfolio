@@ -12,12 +12,10 @@ class BoardWrite extends Component {
 
     getTitleValue = (e) => {
         this.setState({ title: e.target.value });
-        console.log(e.target.id, this.state.title);
     };
 
     getContentValue = (e) => {
         this.setState({ content: e.target.value });
-        console.log(e.target.id, this.state.content);
     };
 
     onClickSave = (e) => {

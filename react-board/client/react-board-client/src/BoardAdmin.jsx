@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { io } from 'socket.io-client';
+import { clientsocket } from './clientSocket';
 import TableRow from './TableRow';
 
 const USER_TYPE = 'amdin';
 const ENDPOINT = 'http://localhost:2999';
+const clientSocket = clientsocket;
 
 class BoardAdmin extends Component {
     state = {
@@ -15,12 +16,6 @@ class BoardAdmin extends Component {
         answer: "N",
         boardList: []
     };
-
-    //socket 연결
-    socket = io.connect(ENDPOINT, {
-        cors:{origin:'localhost:2999'}
-    });
-
 
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/select")
@@ -37,10 +32,7 @@ class BoardAdmin extends Component {
     }};
                 
     componentDidMount() {
-        this.socket.on("connect", () => {
-            console.log("connection server :: ", this.socket.id);
-        });
-
+        console.log('admin - socket : ', clientSocket.id);
         this.onClickDBConnection();
     };
 
