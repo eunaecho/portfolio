@@ -21,7 +21,7 @@ server.listen(PORT, () => {
 
 //socket server
 io.on("connection", (socket) => {
-    console.log("CONNECT :: New Cient Connected :: ");
+    console.log("CONNECT :: New Cient Connected :: " , socket.id);
     {
         // 게시글 추가
         
@@ -34,9 +34,8 @@ io.on("connection", (socket) => {
             // 저장 후 사용자, 관리자에게 알림
         })
 
-
-        socket.on("disconnect", (id) => {
-            console.log('>>>> SERVER CONNECTION END ', id);
+        socket.on("disconnection", ( ) => {
+            console.log('>>>> SERVER CONNECTION END ', socket.id);
         })
     }
 });

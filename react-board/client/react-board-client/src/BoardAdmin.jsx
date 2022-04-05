@@ -20,7 +20,8 @@ class BoardAdmin extends Component {
     socket = io.connect(ENDPOINT, {
         cors:{origin:'localhost:2999'}
     });
-    
+
+
     onClickDBConnection = () => {
         fetch("http://localhost:2999/board/select")
         .then((res) => res.json())
@@ -54,7 +55,7 @@ class BoardAdmin extends Component {
                             <th>번호</th>       
                             <th style={{ width:'300px' }} onClick={this.onClickBoardTitle}>제목</th>
                             <th style={{ width:'80px' }}>작성자</th>   
-                            <th style={{ width:'80px' }}>작성 날짜</th>
+                            <th style={{ width:'100px' }}>작성 날짜</th>
                             <th>답변</th>
                         </tr>
                     </thead>

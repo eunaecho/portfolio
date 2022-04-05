@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
 import io from 'socket.io-client';
 
-const USER_TYPE = 'user';
 const ENDPOINT = 'http://localhost:2999';
 
 // const getUserType = () => {
@@ -27,24 +26,22 @@ class Board extends Component {
     };
 
     //socket 연결
-    socket = io.connect(ENDPOINT, { cors: { origin:'localhost:2999', 
-                                            Credential:true }});
+    clientSocket = io.connect(ENDPOINT, { cors: { origin:'localhost:2999', Credential:true }});
     
     componentDidMount() {
-        this.socket.on("connect", () => {
-                console.log("connection server :: ", this.socket);       
-                console.log("this props", this.props);
-        });
-       
+        const { clientSocket } = this;
+        clientSocket.emit("connection", (clientSocket) => {
+                console.log("connection server :: ", clientSocket);       
+            });
+
         this.onClickDBConnection();
     };
 
     componentDidUpdate() {
-
     };
     
-    componentWillUnmount() {
-         
+    componentWillUnmount() { 
+
     }
 
     onClickDBConnection = () => {
@@ -72,7 +69,7 @@ class Board extends Component {
                             <th>번호</th>       
                             <th style={{ width:'300px' }}>제목</th>
                             <th style={{ width:'80px' }}>작성자</th>   
-                            <th style={{ width:'80px' }}>작성 날짜</th>
+                            <th style={{ width:'100px' }}>작성 날짜</th>
                             <th>답변</th>
                         </tr>
                     </thead>
@@ -82,7 +79,7 @@ class Board extends Component {
                     </tbody>
                 </table>
                 <div>
-                    <Link to="/board/write" state={ {socket:this.socket}}>
+                    <Link to="/board/write" >
                         <button style={{ margin:'5px' }}>글쓰기</button>
                     </Link>
                 </div>

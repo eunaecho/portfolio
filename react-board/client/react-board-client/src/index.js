@@ -6,6 +6,8 @@ import BoardAdmin from './BoardAdmin';
 import BoardWrite from './BoardWrite';
 import BoardRead from './BoardRead';
 
+
+
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
@@ -18,5 +20,4 @@ ReactDOM.render(
     , document.getElementById('root')
 );
 
-// react-router-dom v6 -> useParams로 param 받기 :hooks..
 
