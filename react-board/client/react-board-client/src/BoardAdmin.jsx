@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { clientsocket } from './clientSocket';
-import TableRow from './TableRow';
+import { Link } from 'react-router-dom';
+import { Client, clientsocket }  from './Client';
 
-const USER_TYPE = 'amdin';
-const ENDPOINT = 'http://localhost:2999';
 const clientSocket = clientsocket;
+const USER_TYPE = 'amdin';
 
 class BoardAdmin extends Component {
     state = {
@@ -17,14 +16,28 @@ class BoardAdmin extends Component {
         boardList: []
     };
 
-    onClickDBConnection = () => {
+    onReceiveResponse() {
+        // 게시글 추가 알림
+        clientsocket.on('SuccessInsertBoard', (msg) => {
+            console.log('SuccessInsertBoard', msg.msg);
+            
+        });
+
+        // 새로운 댓글 알림 
+        clientsocket.on('SuccessInsertReply', () => {
+            console.log('SuccessInsertReply');
+            this.getBoardList();
+        });
+    }
+
+    getBoardList = () => {
         fetch("http://localhost:2999/board/select")
         .then((res) => res.json())
-        .then((res) => { this.getBoardList(res); });
+        .then((res) => { this.setBoardList(res); });
     }
     
-    getBoardList = (res) => {
-        this.boardList = [];
+    setBoardList = (res) => {
+        this.state.boardList = [];
         for(var i=0; i< res.length; i++) {
             this.setState((prevState) => {
                 return {
@@ -32,8 +45,8 @@ class BoardAdmin extends Component {
     }};
                 
     componentDidMount() {
-        console.log('admin - socket : ', clientSocket.id);
-        this.onClickDBConnection();
+        this.onReceiveResponse();
+        this.getBoardList();
     };
 
     render() {
@@ -53,7 +66,19 @@ class BoardAdmin extends Component {
                     </thead>
 
                     <tbody>
-                        { boardList.map((v, i) => <TableRow key={i} data={v}/> )}
+                        { boardList.map((v, i) => {
+                             return (
+                                <tr key={v.idx}>
+                                    <td> {v.idx}</td>
+                                    <td id={v.title}>
+                                        <Link to={`/board/admin/read/${v.idx}`}>{v.title} { v.cnt!==0 ? `[${v.cnt}]` : '' }</Link>
+                                    </td>
+                                    <td> {v.writer_name} </td>
+                                    <td> {v.writedate} </td>
+                                    <td> {v.answer_yn} </td>
+                                </tr>
+                            );
+                        } )}
                     </tbody>
                 </table>
             </>

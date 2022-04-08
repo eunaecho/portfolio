@@ -7,35 +7,32 @@ const clientSocket = clientsocket;
 
 class BoardRead extends Component {
     state = {
-        header: '게시글 확인 화면',
+        header: '관리자 게시글 확인 화면',
         boardIdx: null,
-        title: '',
-        writer: '',
-        content: '',
-        rWriter : null,
+        title: null,
+        writer: null,
+        content: null,
+        comment: null,
+        rWriter : '관리자',
         rContent : null,
         replyList : []
     };
 
-    // 답변 추가시 알림받고 리렌더링
-
-    // 새로운 댓글 추가시 알림받고 리렌더링
-
-    refInputName = createRef();
+    refInputComment = createRef();
     refInputReply = createRef(); 
 
     componentDidMount() {
-
         this.getBoardData();
+        // this.getComment();
         this.getReplyList();
 
         clientSocket.on('SuccessInsertReply', () => {
             this.getReplyList();
         });
+
     };
 
     numBoard = this.props.router.params.index;
-
     getBoardData = () => {
         fetch(`http://localhost:2999/board/read/select/${this.numBoard}`)
         .then((res) => res.json())
@@ -45,6 +42,16 @@ class BoardRead extends Component {
                             content: res[0].contents }); 
         });
     };
+
+    getComment = () => {
+        fetch(`http://localhost:2999/board/read/select/${this.numBoard}/comment`)
+        .then((res) => res.json())
+        .then((res) => { 
+            this.setState({ title: res[0].title,
+                            writer: res[0].writer_name,
+                            content: res[0].contents }); 
+        });
+    }
 
     getReplyList = () => {
         this.state.replyList = [];
@@ -64,16 +71,33 @@ class BoardRead extends Component {
         }
     }
 
-    getNameValue = (e) => {
-        this.setState( { rWriter : e.target.value });
-    };
-
     getReplyValue = (e) => {
         this.setState({ rContent: e.target.value });
     };
 
+    getCommentValue = (e) => {
+        this.setState({ comment: e.target.value });
+    };
+
+    onClickCommentButton = () => {
+        const post = { 
+            postBoardIdx : this.numBoard,
+            postComment : this.state.comment };
+
+        if( post.postComment!=null) {
+            clientSocket.emit('addComment', post);
+
+            this.setState({ comment: null });
+        }
+
+        this.refInputComment.current.value = '';
+
+        clientSocket.on('SuccessInsertComment', () => {
+            console.log(' 답변 성공! ');
+        });
+    };
+
     onClickReplyButton = () => {
-        // 서버로 전송 -> 서버에서 받아서 db에 저장
         const post = {
             postBoardNum : this.numBoard,
             postRWriter : this.state.rWriter,
@@ -83,17 +107,11 @@ class BoardRead extends Component {
         if (post.postRWriter!=null && post.postRContent!=null){
             clientSocket.emit('addReply', post);
     
-            // state 초기화
-            this.setState({
-                rWriter: '',
-                rContent: ''
-            });
+            this.setState({ rContent: null });
         }
 
-        this.refInputName.current.value = '';
         this.refInputReply.current.value = '';
     };
-
 
     render() {
         const { header, replyList} = this.state;
@@ -119,15 +137,13 @@ class BoardRead extends Component {
                 </table>
             </div>
 
-            <div>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th style={{width:'100px'}}> 관리자 답변 </th>
-                            <td style={{width:'500px'}}> 미답변 </td>
-                        </tr>
-                    </tbody>
-                </table>
+            {/* 답변 여부가 'N' 인 경우에만 나오도록 */}
+            <div id='div-comment' style={{ marginTop:'10px', marginBottom:'50px' }}>
+                <div style={{margin:'5px'}}> 답변 </div>
+                <textarea id='div-input-comment-text' type='text' rows={10} style={{ verticalAlign:'middle' , marginLeft:'10px', width: '500px'}}
+                            onChange={this.getCommentValue} ref={this.refInputComment}/>
+                
+                <button id='btn-comment' onClick={this.onClickCommentButton} style={{ marginLeft:'10px',  height: '150px'}}> 입력</button>
             </div>
 
             <div>
@@ -144,27 +160,23 @@ class BoardRead extends Component {
                                                             <td>{v.commenter}</td>
                                                             <td>{v.contents}</td>
                                                             <td>{v.writedate}</td>
-                                                        </tr> )
+                                                         </tr> )
                     })}
                 </tbody>
                 </table>
             </div>
 
-            <div id='div-reply'>
-                <label> 이름
-                    <input id='div-input-reply-name' type='text' style={{width: '80px', height:'25px'}}
-                            onChange={this.getNameValue} ref={this.refInputName}/>
-                </label>
-                <label> 댓글
-                    <input id='div-input-reply-text' type='text' style={{width: '200px', height:'25px'}}
+            <div id='div-reply' style={{ marginTop:'10px', marginBottom:'10px' }}>
+                <label  style={{ margin:'5px'}}> 관리자 댓글
+                    <input id='div-input-reply-text' type='text' style={{ marginLeft:'10px', width: '250px', height:'25px'}}
                             onChange={this.getReplyValue} ref={this.refInputReply}/>
                 </label>
-                <button id='btn-reply' onClick={this.onClickReplyButton}> 입력</button>
+                <button id='btn-reply' onClick={this.onClickReplyButton} style={{ marginLeft:'10px',  height: '30px'}}> 입력</button>
             </div>
 
             <div>
-                <Link to="/board/user">
-                    <button id=" btn-board">목록으로</button>
+                <Link to="/board/admin">
+                    <button id=" btn-board" style={{margin:"5px"}}>목록으로</button>
                 </Link>
             </div>
 
@@ -174,5 +186,3 @@ class BoardRead extends Component {
 };
 
 export default withRouter(BoardRead);
-
-//파스칼 케이스로 해야함 -> <text> 부분 고치기

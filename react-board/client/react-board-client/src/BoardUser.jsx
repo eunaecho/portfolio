@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
-import { clientsocket } from './clientSocket';
-
-const ENDPOINT = 'http://localhost:2999';
+import { Client, clientsocket }  from './Client';
 
 const clientSocket = clientsocket;
+// Client(clientsocket);
 
 class Board extends Component {
     state = {
@@ -17,22 +16,37 @@ class Board extends Component {
         answer: "N",
         boardList: []
     };
-    
-    componentDidMount() {
-        console.log('client - socket : ', clientSocket.id);
 
-        this.onClickDBConnection();
+    componentDidMount() {
+        this.getBoardList();
+        this.onReceiveResponse();
     };
 
-    onClickDBConnection = () => {
+    onReceiveResponse() {
+        // 게시글 추가 성공시
+        clientSocket.on('SuccessInsertBoard', (msg) => {
+            this.getBoardList();
+        });
+
+        // 답변 달린 경우
+        clientSocket.on('SuccessInsertComment', () => {
+        });
+
+        // 새로운 댓글 알림 
+        clientSocket.on('SuccessInsertReply', () => {
+            this.getBoardList();
+        });
+    }
+
+    getBoardList = () => {
         fetch("http://localhost:2999/board/select")
         .then((res) => res.json())
-        .then((res) => { this.getBoardList(res); });
+        .then((res) => { this.setBoardList(res); });
     }
     
-    getBoardList = (res) => {
-        this.boardList = [];
-        for(var i=0; i< res.length; i++) {
+    setBoardList = (res) => {
+        this.state.boardList = [];
+        for(let i=0; i< res.length; i++) {
             this.setState((prevState) => {
                 return {
                     boardList: [...prevState.boardList, res[i]] }});

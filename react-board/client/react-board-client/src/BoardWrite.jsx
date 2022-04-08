@@ -1,17 +1,26 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Client, clientsocket }  from './Client';
 
+const clientSocket = clientsocket;
 
 class BoardWrite extends Component {
     state = {
         header: '사용자 입력 화면',
-        title: '_빈 제목',
-        writer: '작성자',
-        content: '_빈 내용'
+        title: null,
+        writer: null,
+        content: null
     };
+    componentDidMount() {
+
+    }
 
     getTitleValue = (e) => {
         this.setState({ title: e.target.value });
+    };
+
+    getWriterValue = (e) => {
+        this.setState({ writer: e.target.value });
     };
 
     getContentValue = (e) => {
@@ -22,25 +31,20 @@ class BoardWrite extends Component {
         // 서버로 전송 -> 서버에서 받아서 db에 저장
         const post = {
             postTitle : this.state.title,
+            postWriter : this.state.writer,
             postContent : this.state.content
         };
 
-        fetch("http://localhost:2999/board/write/insert", {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(post),
-        })
-        .then((res) => res.json())
-        .then((res) => { console.log('server response : ' , res); });
-
-        // state 초기화
-        this.setState({
-            title: '',
-            content: ''
-        })
-
+        if (post.postTitle!=null && post.postContent!=null){
+            clientSocket.emit('addBoard', post);
+    
+            // state 초기화
+            this.setState({
+                title: '',
+                writer: '',
+                content: ''
+            })
+        }
     };
 
     render() {
@@ -50,19 +54,22 @@ class BoardWrite extends Component {
                 <div>
                     <h1>{header}</h1>
                     <table id='client-input'>
-                        <thead>
+                        <tbody>
                             <tr>
-                                <th> 제목 </th>
-                                <td>
+                                <th className="th-client-input"> 제목 </th>
+                                <td className="td-client-input">
                                     <input id='board-title' type='text' onChange={this.getTitleValue}/>
                                 </td>
                             </tr>
-                        </thead>
-
-                        <tbody>
                             <tr>
-                                <th> 내용 </th>
-                                <td>
+                                <th className="th-client-input"> 작성자 </th>
+                                <td className="td-client-input">
+                                    <input id='board-writer' type='text' onChange={this.getWriterValue}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th className="th-client-input"> 내용 </th>
+                                <td className="td-client-input">
                                     <textarea id='board-content' rows="10" onChange={this.getContentValue}></textarea>
                                 </td>
                             </tr>

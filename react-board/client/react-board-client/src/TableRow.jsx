@@ -8,7 +8,7 @@ const TableRow = ( {data} ) => {
         <tr key={rowData.idx}>
             <td> {rowData.idx}</td>
             <td id={rowData.title}>
-                <Link to={`/board/read/${rowData.idx}`}>{rowData.title}</Link>
+                <Link to={`/board/read/${rowData.idx}`}>{rowData.title} { rowData.cnt!==0 ? `[${rowData.cnt}]` : '' }</Link>
             </td>
             <td> {rowData.writer_name} </td>
             <td> {rowData.writedate} </td>
