@@ -1,12 +1,14 @@
-const rmStyle = {
+import React, { useState } from "react"
+
+const rmStyle = ({hover}) => ({
     display:'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'yellow',
+    color: hover ? '#ff6b6b' : 'yellow',
     fontSize: '20px',
     cursor: 'pointer',
     display:'none'
-}
+})
 
 const ItemBlockStyle = {
     display: 'flex',
@@ -35,12 +37,16 @@ const Text = {
 }
 
 export const TodoItem = ({text, rm}) => {
+    const [ hover, setHover ] = useState(false);
+    
     return (
-        <TodoItem>
-            <checkCircle> </checkCircle>
-            <Text>{text}</Text>
-            <rmStyle>{rm}</rmStyle>
-        </TodoItem>
+        <div style={TodoItem}>
+            <div style={checkCircle}> </div>
+            <div style={Text}>{text}</div>
+            <div style={rmStyle({hover})}
+            onPointerOver={()=> setHover(true)}
+            onPointerOut={()=> setHover(false)}>{rm}</div>
+        </div>
     );
 }
 

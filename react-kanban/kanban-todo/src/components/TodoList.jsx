@@ -1,3 +1,5 @@
+import { TodoItem } from "./TodoItem";
+
 const listStyle = {
     flex: 1,
     padding: '10px 10px',
@@ -10,7 +12,7 @@ const listStyle = {
 const TodoList = () => {
     return (
         <div style={listStyle}>
-            TodoList
+            todoItem
         </div>
     );
 }
