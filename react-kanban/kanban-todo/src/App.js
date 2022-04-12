@@ -4,12 +4,10 @@ import TodoTemplate from "./components/TodoTemplate";
 
 function App() {
   return (
-    <>
       <TodoTemplate>
         <TodoHead/>
         <TodoList/>
       </TodoTemplate>
-    </>
     );
 }
 

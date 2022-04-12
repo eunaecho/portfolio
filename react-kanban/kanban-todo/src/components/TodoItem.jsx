@@ -1,28 +1,35 @@
 import React, { useState } from "react"
+import { useDrag } from "react-dnd"
+import { ItemType } from "./ItemType"
 
-const rmStyle = ({hover}) => ({
+/***
+ const RemoveStyle = ({hover}) => ({
     display:'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: hover ? '#ff6b6b' : 'yellow',
     fontSize: '20px',
     cursor: 'pointer',
-    display:'none'
+    display: hover ? 'initial' : 'none',
+    text:'remove'
 })
+***/
 
 const ItemBlockStyle = {
     display: 'flex',
+    borderRadius: '10px',
+    border: '1px solid white',
     alignItems: 'center',
-    paddingTop: '10px',
-    paddingBottom: '10px',
+    padding: '5px',
+    margin: '5px'
 }
 
 const checkCircle = {
-    width: '30px',
-    height: '30px',
-    borderRadius: '16px',
+    width: '15px',
+    height: '15px',
+    borderRadius: '15px',
     border: '1px solid #ced4da',
-    fontSize: '20px',
+    fontSize: '15px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -30,22 +37,30 @@ const checkCircle = {
     cursor: 'pointer'
 }
 
-const Text = {
+const ItemText = {
     flex: 1,
     fontSize : '15px',
-    color: '#495057',
+    color: '#495458',
 }
 
-export const TodoItem = ({text, rm}) => {
-    const [ hover, setHover ] = useState(false);
+export const TodoItem = ({text}) => {
+    const [ {isDragging}, drag ] = useDrag(() => {
+        type: ItemType.CARD 
+        item: () => {
+            return {  }
+        }
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        })
+    });
+
+    const opacity = isDragging ? 0 : 1 
+    drag()
     
     return (
-        <div style={TodoItem}>
+        <div style={ItemBlockStyle}>
             <div style={checkCircle}> </div>
-            <div style={Text}>{text}</div>
-            <div style={rmStyle({hover})}
-            onPointerOver={()=> setHover(true)}
-            onPointerOut={()=> setHover(false)}>{rm}</div>
+            <div style={ItemText}>{text}</div>
         </div>
     );
 }

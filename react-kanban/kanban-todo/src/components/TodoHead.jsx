@@ -14,12 +14,9 @@ const h1Style = {
 
 const TodoHead = () => {
     return (
-        <>
             <div style={headStyle}>
                 <h1 style={h1Style}> 2022년 4월 11일 </h1>
             </div>
-
-        </>
     );
 }
 
