@@ -1,39 +1,29 @@
-import React, { useState } from "react"
-import { useDrag } from "react-dnd"
+import React, { useRef, useState } from "react"
+import { useDrag, useDrop } from "react-dnd"
 import { ItemType } from "./ItemType"
 
-/***
- const RemoveStyle = ({hover}) => ({
-    display:'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: hover ? '#ff6b6b' : 'yellow',
-    fontSize: '20px',
-    cursor: 'pointer',
-    display: hover ? 'initial' : 'none',
-    text:'remove'
-})
-***/
 
-const ItemBlockStyle = {
+const ItemBlockStyle = ({hover}) => ({
     display: 'flex',
     borderRadius: '10px',
-    border: '1px solid white',
+    border: '1px dashed black',
     alignItems: 'center',
     padding: '5px',
-    margin: '5px'
-}
+    margin: '5px',
+    background: 'white',
+})
 
 const checkCircle = {
-    width: '15px',
-    height: '15px',
+    width: '10px',
+    height: '10px',
     borderRadius: '15px',
-    border: '1px solid #ced4da',
+    border: '1px solid gray',
     fontSize: '15px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '20px',
+    marginRight: '10px',
+    marginLeft: '5px',
     cursor: 'pointer'
 }
 
@@ -43,24 +33,25 @@ const ItemText = {
     color: '#495458',
 }
 
-export const TodoItem = ({text}) => {
-    const [ {isDragging}, drag ] = useDrag(() => {
-        type: ItemType.CARD 
-        item: () => {
-            return {  }
-        }
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        })
-    });
+const RemoveButton = ({hover}) => ({
+    display:'flex',
+    border: 'none',
+    background: 'transparent',
+    alignText: 'center',
+    fontSize: '12px',
+    cursor: 'pointer',
+    value: 'remove',
+    display: hover ? 'initial' : 'none' ,
+})
 
-    const opacity = isDragging ? 0 : 1 
-    drag()
-    
+export const TodoItem = ({text}) => {
+    const [hover, setHover] = useState(false);
+
     return (
-        <div style={ItemBlockStyle}>
+        <div style={ItemBlockStyle({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)}>
             <div style={checkCircle}> </div>
             <div style={ItemText}>{text}</div>
+            <button style={RemoveButton({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)}>삭제</button>
         </div>
     );
 }

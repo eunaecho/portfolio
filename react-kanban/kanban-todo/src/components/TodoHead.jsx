@@ -3,7 +3,9 @@ const headStyle = {
     paddingLeft: '15px',
     paddingRight: '15px',
     paddingBottom: '25px',
-    borderBottom : '1px solid #e9ecef',
+    borderBottom : '2px solid #DB7093',
+    width: '90%',
+    textAlign: 'center',
 }
 
 const h1Style = {
@@ -15,7 +17,7 @@ const h1Style = {
 const TodoHead = () => {
     return (
             <div style={headStyle}>
-                <h1 style={h1Style}> 2022년 4월 11일 </h1>
+                <h1 style={h1Style}> TO DO LIST </h1>
             </div>
     );
 }

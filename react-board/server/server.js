@@ -59,7 +59,7 @@ const db = mariadb.createPool(config);
 // 사용자 -> 게시판 불러오기 (List)
 app.get("/board/select", (req, res) => {
     const sqlQuery = 
-    "select b.idx, b.title, b.contents, b.writer_name, b.answer_yn, b.writedate , count(r.board_idx) as cnt" 
+    "select b.idx, b.title, b.contents, b.writer_name, b.answer_yn, date_format(b.writedate, '%Y.%m.%d ') as writedate, count(r.board_idx) as cnt" 
     + " from tb_board b left join tb_reply r on b.idx = r.board_idx"
     + " group by b.idx"
     db.query(sqlQuery, (err, result) => {
