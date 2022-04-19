@@ -10,14 +10,19 @@ const headStyle = {
 
 const h1Style = {
     margin:0,
-    fontSize: '30px',
-    color: 'white'
+    fontSize: '28px',
+    color: 'gray',
+    textAlign: 'left'
 }
 
 const TodoHead = () => {
+    function callDoneList() {
+        console.log('DONE LIST');
+    }
+
     return (
             <div style={headStyle}>
-                <h1 style={h1Style}> TO DO LIST </h1>
+                <h1 style={h1Style} onClick={callDoneList}> TO DO LIST </h1>
             </div>
     );
 }

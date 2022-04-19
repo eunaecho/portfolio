@@ -1,6 +1,4 @@
 import React, { useRef, useState } from "react"
-import { useDrag, useDrop } from "react-dnd"
-import { ItemType } from "./ItemType"
 
 
 const ItemBlockStyle = ({hover}) => ({
@@ -14,11 +12,11 @@ const ItemBlockStyle = ({hover}) => ({
 })
 
 const checkCircle = {
-    width: '10px',
-    height: '10px',
-    borderRadius: '15px',
+    width: '13px',
+    height: '13px',
+    borderRadius: '5px',
     border: '1px solid gray',
-    fontSize: '15px',
+    fontSize: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -34,7 +32,17 @@ const ItemText = {
 }
 
 const RemoveButton = ({hover}) => ({
-    display:'flex',
+    border: 'none',
+    background: 'transparent',
+    color: 'red',
+    alignText: 'center',
+    fontSize: '12px',
+    cursor: 'pointer',
+    value: 'remove',
+    display: hover ? 'initial' : 'none' ,
+});
+
+const ModifyButton = ({hover}) => ({
     border: 'none',
     background: 'transparent',
     alignText: 'center',
@@ -42,17 +50,29 @@ const RemoveButton = ({hover}) => ({
     cursor: 'pointer',
     value: 'remove',
     display: hover ? 'initial' : 'none' ,
-})
+});
 
-export const TodoItem = ({text}) => {
+export const TodoItem = (props) => {
     const [hover, setHover] = useState(false);
-
+    
+    function checkItem() {
+        console.log('checkItem');
+    }
+    
+    function callModifyItem() {
+        console.log('callModifyItem');
+    }
+    
+    function callRemoveItem() {
+        props.removeItem(props.index, props.content);
+    }
+    
     return (
         <div style={ItemBlockStyle({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)}>
-            <div style={checkCircle}> </div>
-            <div style={ItemText}>{text}</div>
-            <button style={RemoveButton({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)}>삭제</button>
+            <div id='btn-check' style={checkCircle} onClick={checkItem}>{props.index}</div>
+            <div style={ItemText}>{props.content}</div>
+            <button style={ModifyButton({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)} onClick={callModifyItem}>수정</button>
+            <button style={RemoveButton({hover})} onPointerOver={()=>setHover(true)} onPointerOut={()=>setHover(false)} onClick={callRemoveItem}>삭제</button>
         </div>
     );
 }
-

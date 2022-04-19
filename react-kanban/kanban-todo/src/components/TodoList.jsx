@@ -7,7 +7,7 @@ const listStyle = {
     padding: '5px 5px',
     paddingBottom: '20px',
     overflowY: 'auto',
-    height: '250px',
+    height: '380px',
 }
 
 //item container
@@ -15,22 +15,22 @@ const TodoList = () => {
     const [items, setItems] = useState([]);
 
     //todo 리스트 받을 callback 함수
-    const addTodoItem = (data) => {
+    const addItem = (data) => {
         setItems((prevItems)=> 
             [...prevItems, data]
         );
-        console.log(data);
     }
 
-    const renderItem = useCallback((item, index) => {
-        return (
-            <TodoItem key={item} index={index} text={item} />
-        )}, [])
+    //filter element로 바꾸니까 바로 삭제됨 
+    //https://shin1303.tistory.com/entry/JavaScriptArray-%EB%B0%B0%EC%97%B4Array%EC%97%90%EC%84%9C-forEach-filter-map-reduce-%ED%8A%B9%EC%A7%95%EA%B3%BC-%EC%B0%A8%EC%9D%B4%EC%A0%90
+    const removeItem = (i, v) => {
+        setItems(items.filter((element ,index) => !((index===i)&&(element===v))));
+    }   
     
     return (
         <div id='div-todolist' style={listStyle}>
-            {items.map((v, i) => renderItem(v, i))}
-            <TodoInput addTodoItem={addTodoItem}/>
+            <TodoInput addItem={addItem}/>
+            {items.map((v, i) => <TodoItem key={i} index={i} content={v} removeItem={removeItem}/>)}
         </div>
     );
 }
