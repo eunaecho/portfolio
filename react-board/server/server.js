@@ -78,7 +78,7 @@ app.get("/board/read/select/:index", (req, res) => {
 });
 
 // 답변 불러오기
-app.get("/board/read/select/:index/comment", (req, res) => {
+app.get("/board/read/select/:index/answer", (req, res) => {
     const sqlQuery = "select board_idx, contents, date_format(writedate, '%Y.%m.%d. %r') as writedate from tb_comment where board_idx = ?";
     db.query(sqlQuery, req.params.index, (err, result) => {
         if(err) throw err;

@@ -12,10 +12,12 @@ class BoardRead extends Component {
         title: null,
         writer: null,
         content: null,
-        comment: null,
-        rWriter : '관리자',
-        rContent : null,
-        replyList : []
+        isAnswer: false,
+        answer: null,
+        anwerTime: null,
+        rWriter: '관리자',
+        rContent: null,
+        replyList: []
     };
 
     refInputComment = createRef();
@@ -23,7 +25,6 @@ class BoardRead extends Component {
 
     componentDidMount() {
         this.getBoardData();
-        // this.getComment();
         this.getReplyList();
 
         clientSocket.on('SuccessInsertReply', () => {
@@ -38,19 +39,23 @@ class BoardRead extends Component {
         .then((res) => res.json())
         .then((res) => { 
             this.setState({ title: res[0].title,
-                            writer: res[0].writer_name,
-                            content: res[0].contents }); 
-        });
+                writer: res[0].writer_name,
+                content: res[0].contents 
+            }); 
+            if(res[0].answer_yn ==='Y'){
+                this.getAnswer(this.numBoard);
+            }});
     };
 
-    getComment = () => {
-        fetch(`http://localhost:2999/board/read/select/${this.numBoard}/comment`)
-        .then((res) => res.json())
-        .then((res) => { 
-            this.setState({ title: res[0].title,
-                            writer: res[0].writer_name,
-                            content: res[0].contents }); 
-        });
+    getAnswer = (num) => {
+        fetch(`http://localhost:2999/board/read/select/${num}/answer`)
+            .then((res) => res.json())
+            .then((res) => {
+                console.log(res);
+                this.setState({ isAnswer: true,
+                                answer: res[0].contents,
+                                answerTime: res[0].writedate }); 
+            });
     }
 
     getReplyList = () => {
@@ -113,6 +118,37 @@ class BoardRead extends Component {
         this.refInputReply.current.value = '';
     };
 
+    showCommentArea(isAnswer) {
+        if(isAnswer) {
+            return (
+                <div>
+                    <table id='tb-show-comment'>
+                        <tbody>
+                            <tr>
+                                <th style={{width:'80px'}} rowSpan='2'> 관리자 <br/> 답변 </th>
+                                <td style={{width:'400px'}} rowSpan='2'> {this.state.answer} </td>
+                            <th style={{width:'110px'}} >작성시간</th>
+                        </tr>
+                        <tr>
+                            <td>{this.state.answerTime}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            );
+        } else {
+            return (
+                <div id='div-comment' style={{ marginTop:'10px', marginBottom:'50px' }}>
+                    <div style={{margin:'5px'}}> 답변 </div>
+                    <textarea id='div-input-comment-text' type='text' rows={10} style={{ verticalAlign:'middle' , marginLeft:'10px', width: '500px'}}
+                                onChange={this.getCommentValue} ref={this.refInputComment}/>
+                    
+                    <button id='btn-comment' onClick={this.onClickCommentButton} style={{ marginLeft:'10px',  height: '150px'}}> 입력</button>
+                </div>
+            );
+        }
+    }
+
     render() {
         const { header, replyList} = this.state;
         return (
@@ -138,13 +174,7 @@ class BoardRead extends Component {
             </div>
 
             {/* 답변 여부가 'N' 인 경우에만 나오도록 */}
-            <div id='div-comment' style={{ marginTop:'10px', marginBottom:'50px' }}>
-                <div style={{margin:'5px'}}> 답변 </div>
-                <textarea id='div-input-comment-text' type='text' rows={10} style={{ verticalAlign:'middle' , marginLeft:'10px', width: '500px'}}
-                            onChange={this.getCommentValue} ref={this.refInputComment}/>
-                
-                <button id='btn-comment' onClick={this.onClickCommentButton} style={{ marginLeft:'10px',  height: '150px'}}> 입력</button>
-            </div>
+            {this.showCommentArea(this.state.isAnswer)}
 
             <div>
                 <table id="tb-show-reply">

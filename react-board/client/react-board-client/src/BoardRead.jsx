@@ -12,6 +12,9 @@ class BoardRead extends Component {
         title: '',
         writer: '',
         content: '',
+        answer: '미답변',
+        answerTime: '-',
+        isAnswer: false,
         rWriter : null,
         rContent : null,
         replyList : []
@@ -19,13 +22,10 @@ class BoardRead extends Component {
 
     // 답변 추가시 알림받고 리렌더링
 
-    // 새로운 댓글 추가시 알림받고 리렌더링
-
     refInputName = createRef();
     refInputReply = createRef(); 
 
     componentDidMount() {
-
         this.getBoardData();
         this.getReplyList();
 
@@ -42,9 +42,21 @@ class BoardRead extends Component {
         .then((res) => { 
             this.setState({ title: res[0].title,
                             writer: res[0].writer_name,
-                            content: res[0].contents }); 
-        });
+                            content: res[0].contents 
+            }); 
+            if(res[0].answer_yn ==='Y'){
+                this.getAnswer(this.numBoard);
+            }});
     };
+                    
+    getAnswer = (num) => {
+        fetch(`http://localhost:2999/board/read/select/${num}/answer`)
+            .then((res) => res.json())
+            .then((res) => {
+                this.setState({ answer: res[0].contents,
+                                answerTime: res[0].writedate }); 
+            });
+    }
 
     getReplyList = () => {
         this.state.replyList = [];
@@ -96,7 +108,7 @@ class BoardRead extends Component {
 
 
     render() {
-        const { header, replyList} = this.state;
+        const { header, replyList, content, answer, answerTime} = this.state;
         return (
             <>
             <h1>{header}</h1>
@@ -113,18 +125,22 @@ class BoardRead extends Component {
                         </tr>
                         <tr>
                             <th className="th-read-class"> 내용 </th>
-                            <td className="td-read-class" id='read-content' width='200px'>{this.state.content}</td>
+                            <td className="td-read-class" id='read-content' width='200px'>{content}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div>
-                <table>
+                <table id='tb-show-comment'>
                     <tbody>
                         <tr>
-                            <th style={{width:'100px'}}> 관리자 답변 </th>
-                            <td style={{width:'500px'}}> 미답변 </td>
+                            <th style={{width:'80px'}} rowSpan='2'> 관리자 <br/> 답변 </th>
+                            <td style={{width:'400px'}} rowSpan='2'> {answer} </td>
+                          <th style={{width:'100px'}} >작성시간</th>
+                      </tr>
+                      <tr>
+                        <td>{answerTime}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -134,7 +150,7 @@ class BoardRead extends Component {
                 <table id="tb-show-reply">
                 <thead>
                     <tr>
-                        <th className="th-reply-class" id='read-reply-writer'> 댓글 작성자 </th>
+                        <th className="th-reply-class" id='read-reply-writer'> 작성자 </th>
                         <th id='read-reply-content' width='400px'> 댓글내용 </th>
                         <th id='read-reply-time' width='100px'> 작성시간 </th>
                     </tr>
@@ -150,7 +166,7 @@ class BoardRead extends Component {
                 </table>
             </div>
 
-            <div id='div-reply'>
+            <div id='div-reply' style={{marginTop:'10px', marginLeft:'5px'}}>
                 <label> 이름
                     <input id='div-input-reply-name' type='text' style={{width: '80px', height:'25px'}}
                             onChange={this.getNameValue} ref={this.refInputName}/>
@@ -164,7 +180,7 @@ class BoardRead extends Component {
 
             <div>
                 <Link to="/board/user">
-                    <button id=" btn-board">목록으로</button>
+                    <button id=" btn-board" style={{marginTop:'10px', marginLeft:'5px'}}>목록으로</button>
                 </Link>
             </div>
 
