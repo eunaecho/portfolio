@@ -12,17 +12,15 @@ const h1Style = {
     margin:0,
     fontSize: '28px',
     color: 'gray',
-    textAlign: 'left'
+    textAlign: 'center'
 }
 
-const TodoHead = () => {
-    function callDoneList() {
-        console.log('DONE LIST');
-    }
-
+const TodoHead = (props) => {
     return (
             <div style={headStyle}>
-                <h1 style={h1Style} onClick={callDoneList}> TO DO LIST </h1>
+                <div>
+                    <h1 style={h1Style}>{props.title}</h1>
+                </div>
             </div>
     );
 }

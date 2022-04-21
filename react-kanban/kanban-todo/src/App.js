@@ -1,14 +1,17 @@
 import TodoHead from "./components/TodoHead";
 import TodoList from "./components/TodoList";
 import TodoTemplate from "./components/TodoTemplate";
-import TodoInput from "./components/TodoInput";
 
 function App() {
+  const headList = ['TO DO LIST', 'DONE'];
+
   return (
-      <TodoTemplate>
-        <TodoHead/>
-        <TodoList/>
-      </TodoTemplate>
+      headList.map((v, i) => (
+          <TodoTemplate key={i+v} index={i}>
+          <TodoHead title={v}/>
+          <TodoList index={i}/>
+          </TodoTemplate>
+      ))
     );
 }
 

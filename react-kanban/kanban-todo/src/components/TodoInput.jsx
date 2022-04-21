@@ -1,19 +1,21 @@
 import { createRef } from "react";
 
 const inputStyle = {
-    display: 'flex',
     width: '290px',
-    marginBottom: '10px',
-    justifyContent: 'center'
+    height: '50px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'transparent',
 }; 
 
 const addTextStyle = {
-    width: '180px',
+    width: '150px',
     height: '25px',
     borderTop: 'none',
     borderLeft: 'none',
     borderRight: 'none',
-    borderBottom: '2px solid gray',
+    borderBottom: '2px solid black',
     background: 'transparent',
     outline: 'none',
     autocomplete: 'false'

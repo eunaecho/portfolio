@@ -1,26 +1,25 @@
 import React, { useRef, useState } from "react"
 
-
-const ItemBlockStyle = ({hover}) => ({
+const ItemBlockStyle = () => ({
     display: 'flex',
     borderRadius: '10px',
     border: '1px dashed black',
     alignItems: 'center',
-    width: '85%',
+    width: '250px',
     padding: '5px',
     margin: '5px',
     background: 'white',
 })
 
 const checkCircle = {
-    width: '13px',
-    height: '13px',
-    borderRadius: '5px',
-    border: '1px solid gray',
-    fontSize: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '13px',
+    height: '13px',
+    border: '1px solid gray',
+    borderRadius: '5px',
+    fontSize: '10px',
     marginRight: '10px',
     marginLeft: '5px',
     cursor: 'pointer'
@@ -28,32 +27,30 @@ const checkCircle = {
 
 const ItemText = {
     flex: 1,
+    outline: 'none',
+    width: '180px',
     border: 'none',
     fontSize : '15px',
     color: '#495458',
-    outline: 'none',
-    width: 'inherit'
 }
 
 const RemoveButton = ({hover}) => ({
+    display: hover ? 'initial' : 'none' ,
     border: 'none',
     background: 'transparent',
     color: 'red',
     alignText: 'center',
-    fontSize: '12px',
+    fontSize: '11px',
     cursor: 'pointer',
-    value: 'remove',
-    display: hover ? 'initial' : 'none' ,
 });
 
 const ModifyButton = ({hover}) => ({
+    display: hover ? 'initial' : 'none' ,
     border: 'none',
     background: 'transparent',
     alignText: 'center',
-    fontSize: '12px',
+    fontSize: '11px',
     cursor: 'pointer',
-    value: 'remove',
-    display: hover ? 'initial' : 'none' ,
 });
 
 export const TodoItem = (props) => {
@@ -77,10 +74,10 @@ export const TodoItem = (props) => {
             e.target.innerText='저장'
         } else {
             // 수정된 값 전달해서(input 전달x, item 자제를 전달해야함 그래야 index와 value를 받아서 setItem 할 때 편함) 저장하기
-            props.modifyItem(props, ref.current.value);
-
-            // 저장버튼 누르면, 다시 readOnly로
-            setReadOnly(true);
+            if(props.content!==ref.current.value) {
+                props.modifyItem(props, ref.current.value);
+            } 
+            setReadOnly(true);      // 저장버튼 누르면, 다시 readOnly로          
             e.target.innerText='수정'
         }
     }
