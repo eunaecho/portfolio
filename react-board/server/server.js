@@ -118,11 +118,10 @@ const insertComment = (boardIdx, content, io) => {
                     db.query("update tb_board set answer_yn = 'Y' where idx = ?", 
                     [boardIdx],
                     function(err) {
-                        if(!err)
-                            io.emit('SuccessInsertComment', { msg: "suc! Com"});
-                        else throw err;
+                        if(err)
+                            throw err;
                     });
-                    
+                    io.emit('SuccessInsertComment', { msg: boardIdx});
                 } else
                     throw err;
             }

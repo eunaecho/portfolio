@@ -31,6 +31,11 @@ class BoardRead extends Component {
             this.getReplyList();
         });
 
+        clientSocket.on('SuccessInsertComment', (msg) => {
+            this.getAnswer(msg);
+            console.log(msg);
+        });
+
     };
 
     numBoard = this.props.router.params.index;
@@ -127,7 +132,7 @@ class BoardRead extends Component {
                             <tr>
                                 <th style={{width:'80px'}} rowSpan='2'> 관리자 <br/> 답변 </th>
                                 <td style={{width:'400px'}} rowSpan='2'> {this.state.answer} </td>
-                            <th style={{width:'110px'}} >작성시간</th>
+                            <th style={{width:'100px'}} >작성시간</th>
                         </tr>
                         <tr>
                             <td>{this.state.answerTime}</td>

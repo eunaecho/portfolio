@@ -32,7 +32,7 @@ class BoardRead extends Component {
         clientSocket.on('SuccessInsertReply', () => {
             this.getReplyList();
         });
-    };
+    }
 
     numBoard = this.props.router.params.index;
 

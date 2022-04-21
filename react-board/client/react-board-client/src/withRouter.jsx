@@ -17,3 +17,4 @@ export function withRouter(Component) {
 }
 
 // export 를 function 앞에 쓰니까 사용 가능 : 이유는? 
+// export / export default 차이?
