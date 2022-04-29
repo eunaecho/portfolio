@@ -30,12 +30,6 @@ class BoardRead extends Component {
         clientSocket.on('SuccessInsertReply', () => {
             this.getReplyList();
         });
-
-        clientSocket.on('SuccessInsertComment', (msg) => {
-            this.getAnswer(msg);
-            console.log(msg);
-        });
-
     };
 
     numBoard = this.props.router.params.index;
@@ -43,13 +37,15 @@ class BoardRead extends Component {
         fetch(`http://localhost:2999/board/read/select/${this.numBoard}`)
         .then((res) => res.json())
         .then((res) => { 
-            this.setState({ title: res[0].title,
+            this.setState({ boardIdx: this.numBoard,
+                title: res[0].title,
                 writer: res[0].writer_name,
                 content: res[0].contents 
             }); 
             if(res[0].answer_yn ==='Y'){
                 this.getAnswer(this.numBoard);
-            }});
+            }
+        });
     };
 
     getAnswer = (num) => {
@@ -102,8 +98,9 @@ class BoardRead extends Component {
 
         this.refInputComment.current.value = '';
 
-        clientSocket.on('SuccessInsertComment', () => {
-            console.log(' 답변 성공! ');
+        clientSocket.on('SuccessInsertComment', (resBoardIdx) => {
+            this.setState({ isAnswer: true });
+            this.getAnswer(resBoardIdx);
         });
     };
 

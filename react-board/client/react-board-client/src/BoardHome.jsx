@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import Modal from "./modal/Modal"
 
 const btnStyle = {
     margin: '2px',
@@ -17,22 +18,27 @@ const inputStyle = {
 
 class BoardHome extends Component {
     state = {
-        type: ''
+        isAdminCheckModalOn: false
     };
 
+    handleAdminCheckModal = () => {
+        this.setState({
+            isAdminCheckModalOn: true
+        });
+    }
+
     render() {
+        const { isAdminCheckModalOn } = this.state;
+
         return (
             <>
                 <div>
-                    <input id='input-id' style={inputStyle}/>
-                    <input id='input-pw' style={inputStyle}/>
-                </div>
-                <div>
-                    <button style={btnStyle} > 로그인 </button>
-                    <Link to='/board/admin'>
-                        <button style={btnStyle} > 관리자 </button>
+                    <Link to='/board/user'>
+                        <button style={btnStyle} > 홈페이지 </button>
                     </Link>
+                        <button onClick={this.handleAdminCheckModal} style={btnStyle} > 관리자 </button>
                 </div>
+                <Modal isOpen={isAdminCheckModalOn}>{"관리자 로그인"}</Modal>
             </>
         );
     }

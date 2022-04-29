@@ -5,7 +5,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
     cors: { origin:'*',
-            methods: ["GET", "POST"]}});//socket 통신 : http 서버를 socket 서버로 upgrade
+    methods: ["GET", "POST"]}});//socket 통신 : http 서버를 socket 서버로 upgrade
 const PORT = process.env.PORT || 2999;
 
 const mariadb = require('mysql');
@@ -20,10 +20,18 @@ server.listen(PORT, () => {
     console.log(`Socket IO server : http://localhost:${PORT}/`);
 });
 
-//socket server
+// 기본 서버 확인
+app.get('/', (req, res) => {
+    res.send('Socket IO server listening on port 2999');
+});
+
+// db 연동
+const db = mariadb.createPool(config);
+
+/****** Socket Server ******/
 io.on("connection", (socket) => {
-    console.log(":: New Cient Connected :: " , socket.id);{
-        
+    console.log("< New Cient Connected > " , socket.id);
+    {    
         // 게시글 추가 요청
         socket.on('addBoard', (msg) => {
             // 게시글 추가 작업
@@ -48,14 +56,8 @@ io.on("connection", (socket) => {
     }
 });
 
-// 기본 서버 확인
-app.get('/', (req, res) => {
-    res.send('Socket IO server listening on port 2999');
-});
 
-// db 연동
-const db = mariadb.createPool(config);
-
+/****** SELECT ******/
 // 사용자 -> 게시판 불러오기 (List)
 app.get("/board/select", (req, res) => {
     const sqlQuery = 
@@ -96,6 +98,7 @@ app.get("/board/read/select/:index/reply", (req, res) => {
     })    
 });
 
+/****** INSERT ******/
 // 게시글 insert 함수
 const insertData = (title, writer, content, io) => {
     const sqlQuery = "insert into tb_board(title, contents, writer_name, answer_yn, writedate) values( ?, ?, ?, ?, now())";
@@ -113,7 +116,7 @@ const insertComment = (boardIdx, content, io) => {
     const sqlQuery = "insert into tb_comment(board_idx, contents, writedate) values( ?, ?, now())";
     db.query(sqlQuery, 
             [boardIdx, content],
-            function(err) {
+            (err) => {
                 if(!err){
                     db.query("update tb_board set answer_yn = 'Y' where idx = ?", 
                     [boardIdx],
@@ -121,7 +124,7 @@ const insertComment = (boardIdx, content, io) => {
                         if(err)
                             throw err;
                     });
-                    io.emit('SuccessInsertComment', { msg: boardIdx});
+                    io.emit('SuccessInsertComment', boardIdx);
                 } else
                     throw err;
             }

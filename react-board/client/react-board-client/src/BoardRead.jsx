@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { withRouter } from "./withRouter";
 import { Client, clientsocket }  from './Client';
 
+import Table from '@mui/material/Table';
+
 const clientSocket = clientsocket;
 
 class BoardRead extends Component {
@@ -20,8 +22,6 @@ class BoardRead extends Component {
         replyList : []
     };
 
-    // 답변 추가시 알림받고 리렌더링
-
     refInputName = createRef();
     refInputReply = createRef(); 
 
@@ -29,24 +29,34 @@ class BoardRead extends Component {
         this.getBoardData();
         this.getReplyList();
 
+        clientSocket.on('SuccessInsertComment', (boardIdx) => {
+            if(this.state.boardIdx===boardIdx)
+                this.getAnswer(boardIdx);
+            else
+                console.log(boardIdx, "번 게시글에 답변 완료");
+        });
+
         clientSocket.on('SuccessInsertReply', () => {
             this.getReplyList();
         });
     }
 
     numBoard = this.props.router.params.index;
-
     getBoardData = () => {
         fetch(`http://localhost:2999/board/read/select/${this.numBoard}`)
         .then((res) => res.json())
         .then((res) => { 
-            this.setState({ title: res[0].title,
+            this.setState({ boardIdx: this.numBoard,
+                            title: res[0].title,
                             writer: res[0].writer_name,
                             content: res[0].contents 
             }); 
             if(res[0].answer_yn ==='Y'){
                 this.getAnswer(this.numBoard);
-            }});
+            } else {
+
+            }
+        });
     };
                     
     getAnswer = (num) => {
@@ -77,7 +87,7 @@ class BoardRead extends Component {
     }
 
     getNameValue = (e) => {
-        this.setState( { rWriter : e.target.value });
+        this.setState({ rWriter : e.target.value });
     };
 
     getReplyValue = (e) => {
@@ -105,7 +115,6 @@ class BoardRead extends Component {
         this.refInputName.current.value = '';
         this.refInputReply.current.value = '';
     };
-
 
     render() {
         const { header, replyList, content, answer, answerTime} = this.state;

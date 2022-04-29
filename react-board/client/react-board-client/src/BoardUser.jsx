@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
 import { Client, clientsocket }  from './Client';
 
+import Table from '@mui/material/Table';
+
 const clientSocket = clientsocket;
 // Client(clientsocket);
 
@@ -29,7 +31,8 @@ class Board extends Component {
         });
 
         // 답변 달린 경우
-        clientSocket.on('SuccessInsertComment', () => {
+        clientSocket.on('SuccessInsertComment', (boardIdx) => {
+            console.log(boardIdx, '번 게시글에 답변완료');
         });
 
         // 새로운 댓글 알림 
@@ -57,7 +60,7 @@ class Board extends Component {
         return (
             <>
                 <h2>{header}</h2>
-                <table id="boardTable">
+                <Table id="boardTable">
                     <thead>
                         <tr>
                             <th>번호</th>       
@@ -71,7 +74,7 @@ class Board extends Component {
                     <tbody>
                         { boardList.map((v, i) => <TableRow key={i} data={v}/> )}
                     </tbody>
-                </table>
+                </Table>
                 <div>
                     <Link to="/board/write" >
                         <button style={{ margin:'5px' }}>글쓰기</button>
