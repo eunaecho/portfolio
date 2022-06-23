@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import TableRow from './TableRow';
-import { Client, clientsocket }  from './Client';
+import { clientsocket }  from './Client';
 
 import Table from '@mui/material/Table';
+import { TableHead } from '@mui/material';
 
 const clientSocket = clientsocket;
-// Client(clientsocket);
 
 class Board extends Component {
     state = {
@@ -61,7 +61,7 @@ class Board extends Component {
             <>
                 <h2>{header}</h2>
                 <Table id="boardTable">
-                    <thead>
+                    <TableHead>
                         <tr>
                             <th>번호</th>       
                             <th style={{ width:'300px' }}>제목</th>
@@ -69,7 +69,7 @@ class Board extends Component {
                             <th style={{ width:'100px' }}>작성 날짜</th>
                             <th>답변</th>
                         </tr>
-                    </thead>
+                    </TableHead>
 
                     <tbody>
                         { boardList.map((v, i) => <TableRow key={i} data={v}/> )}

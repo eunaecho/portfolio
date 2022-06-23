@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
         });
         
          // 답변 달기
-         socket.on('addComment', ( msg ) => {            
+         socket.on('addComment', (msg) => {            
             // 댓글 db에 저장 : 댓글 idx(auto_), 게시글 idx, 작성자 이름, 내용, 시간(now())
             insertComment( msg.postBoardIdx, msg.postComment, io );
         });
@@ -56,8 +56,19 @@ io.on("connection", (socket) => {
     }
 });
 
+/****** SELECT(ADMIN) ******/
+app.get("/board/admin/select/:id", (req, res) => {
+    const sqlQuery = "select id, pw from tb_admin";
+    db.query(sqlQuery, (err, result) => {
+        if(err) throw err;
+        else {
+            console.log('--', req.params.id);
+            res.json(result);
+        }
+    });
+});
 
-/****** SELECT ******/
+/****** SELECT(USER) ******/
 // 사용자 -> 게시판 불러오기 (List)
 app.get("/board/select", (req, res) => {
     const sqlQuery = 
@@ -67,7 +78,7 @@ app.get("/board/select", (req, res) => {
     db.query(sqlQuery, (err, result) => {
         if(err) throw err;
         else res.json(result);
-    })    
+    });    
 });
 
 // 게시판 글 불러오기 (One)

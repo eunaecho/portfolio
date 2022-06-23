@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { withRouter } from "./withRouter";
 import { Client, clientsocket }  from './Client';
 
-import Table from '@mui/material/Table';
-
 const clientSocket = clientsocket;
 
 class BoardRead extends Component {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Client, clientsocket }  from './Client';
 
-const clientSocket = clientsocket;
+const aClientSocket = clientsocket;
 const USER_TYPE = 'amdin';
 
 class BoardAdmin extends Component {
@@ -18,14 +18,12 @@ class BoardAdmin extends Component {
 
     onReceiveResponse() {
         // 게시글 추가 알림
-        clientsocket.on('SuccessInsertBoard', (msg) => {
-            console.log('SuccessInsertBoard', msg.msg);
-            
+        aClientSocket.on('SuccessInsertBoard', (msg) => {
+            this.getBoardList();
         });
 
         // 새로운 댓글 알림 
-        clientsocket.on('SuccessInsertReply', () => {
-            console.log('SuccessInsertReply');
+        aClientSocket.on('SuccessInsertReply', () => {
             this.getBoardList();
         });
     }

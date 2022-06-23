@@ -2,18 +2,31 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./modal/Modal"
 
-const btnStyle = {
-    margin: '2px',
+const frameStyle = {
+    margin: 'auto',
+}
+const userBtnStyle = {
+    display: 'block',
+    margin: 'auto',
+    width: '200px',
+    height: '100px',
+    border: 'none',
+    borderRadius: '60px',
+    background: '#003366',
+    fontSize: '20px',
+}
+const adminStyle = {
+    display: 'inline-block',
+    float: 'right'
+}
+const adminBtnStyle = {
+    display: 'block',
+    margin: 'auto',
     width: '200px',
     height: '30px',
-    border: 'none'
-}
-
-const inputStyle = {
-    margin: '2px',
-    width: '400px',
-    height: '30px',
-    autocomplete: 'false',
+    border: 'none',
+    background: 'none',
+    borderRadius: '20px'
 }
 
 class BoardHome extends Component {
@@ -23,7 +36,7 @@ class BoardHome extends Component {
 
     handleAdminCheckModal = () => {
         this.setState({
-            isAdminCheckModalOn: true
+            isAdminCheckModalOn: !(this.state.isAdminCheckModalOn) 
         });
     }
 
@@ -31,15 +44,19 @@ class BoardHome extends Component {
         const { isAdminCheckModalOn } = this.state;
 
         return (
-            <>
-                <div>
-                    <Link to='/board/user'>
-                        <button style={btnStyle} > 홈페이지 </button>
-                    </Link>
-                        <button onClick={this.handleAdminCheckModal} style={btnStyle} > 관리자 </button>
+            <div style={frameStyle}>
+                <div style={adminStyle}>
+                    <button onClick={this.handleAdminCheckModal} style={adminBtnStyle}>관리자 로그인</button>
+                    <Modal isOpen={isAdminCheckModalOn}>관리자 로그인</Modal>
                 </div>
-                <Modal isOpen={isAdminCheckModalOn}>{"관리자 로그인"}</Modal>
-            </>
+                <div>
+                    <button style={userBtnStyle} >
+                    <Link to='/board/user'>
+                        VoC
+                    </Link>
+                    </button>
+                </div>
+            </div>
         );
     }
 }
