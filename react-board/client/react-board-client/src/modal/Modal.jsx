@@ -43,23 +43,16 @@ class Modal extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            aId: "",
-            aPw: ""
-        };
-
         this.checkInfo = this.checkInfo.bind(this);
     }
 
     checkInfo = () => {
-        this.setState({
-            aId: document.getElementById('input-id').value,
-            aPw: document.getElementById('input-pw').value
-        });
+        var tmpId = document.getElementById('input-id').value;
+        var tmpPw = document.getElementById('input-pw').value;
 
-        fetch(`http://localhost:2999/board/admin/select/${this.state.aId}`)
+        fetch(`http://localhost:2999/board/admin/select/${tmpId}/${tmpPw}`)
         .then((res) => res.json())
-        .then((res) => { console.log(res) });
+        .then((res) => { console.log('res : ' , res) });
         
     }
    

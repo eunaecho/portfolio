@@ -57,14 +57,14 @@ io.on("connection", (socket) => {
 });
 
 /****** SELECT(ADMIN) ******/
-app.get("/board/admin/select/:id", (req, res) => {
-    const sqlQuery = "select id, pw from tb_admin";
-    db.query(sqlQuery, (err, result) => {
+app.get("/board/admin/select/:id/:pw", (req, res) => {
+    const sqlQuery = "select name from tb_admin where id=? and pw=?";
+    db.query(sqlQuery, [req.params.tmpId, req.params.tmpPw], (err, result) => {
         if(err) throw err;
-        else {
-            console.log('--', req.params.id);
+        else{
+            console.log(req.params.tmpId, '//', req.params.tmpPw);
             res.json(result);
-        }
+        } 
     });
 });
 

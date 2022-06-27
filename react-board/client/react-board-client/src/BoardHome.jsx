@@ -3,16 +3,18 @@ import { Link } from "react-router-dom";
 import Modal from "./modal/Modal"
 
 const frameStyle = {
+    display: 'block',
     margin: 'auto',
 }
 const userBtnStyle = {
-    display: 'block',
     margin: 'auto',
+    padding: '10px',
     width: '200px',
     height: '100px',
     border: 'none',
-    borderRadius: '60px',
+    borderRadius: '30px',
     background: '#003366',
+    color: 'white',
     fontSize: '20px',
 }
 const adminStyle = {
@@ -49,12 +51,12 @@ class BoardHome extends Component {
                     <button onClick={this.handleAdminCheckModal} style={adminBtnStyle}>관리자 로그인</button>
                     <Modal isOpen={isAdminCheckModalOn}>관리자 로그인</Modal>
                 </div>
-                <div>
-                    <button style={userBtnStyle} >
+                <div style={{"width":"fit-content"}}>
                     <Link to='/board/user'>
-                        VoC
-                    </Link>
+                    <button style={userBtnStyle} >
+                        고객의 소리
                     </button>
+                    </Link>
                 </div>
             </div>
         );
