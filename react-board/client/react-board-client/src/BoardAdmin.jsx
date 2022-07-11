@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Client, clientsocket }  from './Client';
+import { clientsocket }  from './Client';
+import Pagenation from './Pagenation';
 
 const aClientSocket = clientsocket;
-const USER_TYPE = 'amdin';
+
+const tableStyle = {
+    margin: 'auto', 
+    padding: '15px',
+    border: 'none',
+    borderRadius: '20px',
+    boxShadow:'0 2px 5px rgba(0,0,0, .25)',
+}
 
 class BoardAdmin extends Component {
     state = {
         header: "관리자 게시판 리스트",
-        index: "0",
+        adminId: clientsocket.id,
+        pageIndex: 1,
+        boardCnt: 10,
         title: "_제목",
-        userName: "_이름",
+        writerName: "_이름",
         writeDate: "_날짜",
         answer: "N",
         boardList: []
@@ -29,7 +39,10 @@ class BoardAdmin extends Component {
     }
 
     getBoardList = () => {
-        fetch("http://localhost:2999/board/select")
+        const { boardCnt, pageIndex } = this.state;
+        const startPage = boardCnt * (pageIndex-1);  //사실상 +1 해줘야하는데 db에서 limit으로 가져오려면 +1 할 필요가 없음.
+
+        fetch(`http://localhost:2999/board/select/${boardCnt}/${startPage}`)
         .then((res) => res.json())
         .then((res) => { this.setBoardList(res); });
     }
@@ -48,11 +61,14 @@ class BoardAdmin extends Component {
     };
 
     render() {
-        const { header, boardList} = this.state ;
+        const { header,adminId, boardList} = this.state ;
         return (
-            <>
-                <h2>{header}</h2>
-                <table id="boardTable">
+            <div style={{ textAlign:'center'}}>
+                <div> 
+                    <h2>{header}</h2>
+                    <p>{adminId}</p>
+                </div>
+                <table id="boardTable" style={tableStyle} >
                     <thead>
                         <tr>
                             <th>번호</th>       
@@ -79,7 +95,10 @@ class BoardAdmin extends Component {
                         } )}
                     </tbody>
                 </table>
-            </>
+                <div>
+                    {Pagenation()}
+                </div>
+            </div>
         )
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "./withRouter";
-import { Client, clientsocket }  from './Client';
+import {  clientsocket }  from './Client';
 
 const clientSocket = clientsocket;
 

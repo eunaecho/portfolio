@@ -58,18 +58,15 @@ io.on("connection", (socket) => {
 
 /****** SELECT(ADMIN) ******/
 app.get("/board/admin/select/:id/:pw", (req, res) => {
-    const sqlQuery = "select name from tb_admin where id=? and pw=?";
-    db.query(sqlQuery, [req.params.tmpId, req.params.tmpPw], (err, result) => {
+    const sqlQuery = "select * from tb_admin where id=? and pw=?";
+    db.query(sqlQuery, [req.params.id, req.params.pw], (err, result) => {
         if(err) throw err;
-        else{
-            console.log(req.params.tmpId, '//', req.params.tmpPw);
-            res.json(result);
-        } 
+        else res.json(result);
     });
 });
 
 /****** SELECT(USER) ******/
-// 사용자 -> 게시판 불러오기 (List)
+// 사용자 -> 게시판 불러오기 (AllList)
 app.get("/board/select", (req, res) => {
     const sqlQuery = 
     "select b.idx, b.title, b.contents, b.writer_name, b.answer_yn, date_format(b.writedate, '%Y.%m.%d ') as writedate, count(r.board_idx) as cnt" 
@@ -78,6 +75,24 @@ app.get("/board/select", (req, res) => {
     db.query(sqlQuery, (err, result) => {
         if(err) throw err;
         else res.json(result);
+    });    
+});
+
+// 사용자 -> 게시판 불러오기 (Pagination)
+app.get("/board/select/:boardCnt/:startPage", (req, res) => {
+    const sqlQuery = 
+    "select b.idx, b.title, b.contents, b.writer_name, b.answer_yn, date_format(b.writedate, '%Y.%m.%d ') as writedate, count(r.board_idx) as cnt" 
+    + " from tb_board b left join tb_reply r on b.idx = r.board_idx"
+    + " group by b.idx"
+    + " limit ?, ?"
+    db.query(sqlQuery
+        , [parseInt(req.params.startPage), parseInt(req.params.boardCnt)]
+        , (err, result) => {
+            if(err) throw err;
+            else {
+                console.log(result);
+                res.json(result);
+            }
     });    
 });
 

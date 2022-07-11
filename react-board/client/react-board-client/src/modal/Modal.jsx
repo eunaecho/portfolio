@@ -37,6 +37,7 @@ const ModalContainer = {
     borderRadius: "100px",
     color: 'white',
     textAlign: "center",
+    boxShadow:'1px 3px 5px rgba(0, 0, 0, .25)',
 }
 
 class Modal extends Component {
@@ -50,10 +51,14 @@ class Modal extends Component {
         var tmpId = document.getElementById('input-id').value;
         var tmpPw = document.getElementById('input-pw').value;
 
-        fetch(`http://localhost:2999/board/admin/select/${tmpId}/${tmpPw}`)
-        .then((res) => res.json())
-        .then((res) => { console.log('res : ' , res) });
-        
+        if(tmpId!==""&&tmpPw!=="") {
+            fetch(`http://localhost:2999/board/admin/select/${tmpId}/${tmpPw}`)
+            .then((res) => res.json())
+            .then((res) => { 
+                if(res==="") console.log('잘못 입력');
+                else console.log(res[0].name);
+            });
+        }
     }
    
     showModal(text) {
